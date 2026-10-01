@@ -1,0 +1,1045 @@
+<!doctype html>
+<html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow"><style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif;background:#fafafa}img{max-width:100%}[hidden]{display:none!important}</style></head><body>
+<title>Health Assessment Form</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&display=swap">
+<style>
+/* Layout: one question group per screen, sticky progress on top, one big action button at the bottom. */
+:root {
+  --bg: #F2F5F6;
+  --surface: #FFFFFF;
+  --ink: #13222B;
+  --muted: #53646E;
+  --line: #CFD9DE;
+  --accent: #0A6C74;
+  --accent-ink: #FFFFFF;
+  --accent-soft: #DCEFF0;
+  --danger: #B0261C;
+  --danger-soft: #FBE7E4;
+  --ok: #1B6B3A;
+  --ok-soft: #E1F1E7;
+  --font-display: 'Bricolage Grotesque', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-body: 'Atkinson Hyperlegible', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0E161B;
+    --surface: #16222A;
+    --ink: #E6EDF0;
+    --muted: #9CACB5;
+    --line: #2C3C46;
+    --accent: #5CC4CB;
+    --accent-ink: #06262A;
+    --accent-soft: #14343A;
+    --danger: #FF8F85;
+    --danger-soft: #3A1F1D;
+    --ok: #7DD99C;
+    --ok-soft: #173525;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0E161B;
+  --surface: #16222A;
+  --ink: #E6EDF0;
+  --muted: #9CACB5;
+  --line: #2C3C46;
+  --accent: #5CC4CB;
+  --accent-ink: #06262A;
+  --accent-soft: #14343A;
+  --danger: #FF8F85;
+  --danger-soft: #3A1F1D;
+  --ok: #7DD99C;
+  --ok-soft: #173525;
+  color-scheme: dark;
+}
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 17px; line-height: 1.5; }
+* { box-sizing: border-box; }
+h1, h2, h3 { font-family: var(--font-display); line-height: 1.15; margin: 0; text-wrap: balance; }
+h1 { font-size: clamp(27px, 7.5vw, 36px); font-weight: 700; }
+h2 { font-size: 24px; font-weight: 700; }
+h3 { font-size: 18px; font-weight: 600; }
+p { margin: 0; }
+a { color: var(--accent); }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+/* Top bar */
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); border-bottom: 1px solid var(--line); }
+.top-in { max-width: 640px; margin: 0 auto; padding: 10px 16px 0; }
+.top-row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-size: 14px; color: var(--muted); }
+.tag { letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; font-size: 12.5px; }
+.track { height: 4px; background: var(--line); margin-top: 9px; }
+.fill { height: 100%; width: 0; background: var(--accent); transition: width .25s ease; }
+@media (prefers-reduced-motion: reduce) { .fill { transition: none; } }
+
+/* Page */
+.app { max-width: 640px; margin: 0 auto; padding-inline: 16px; padding-block: 24px 130px; }
+.step { display: flex; flex-direction: column; gap: 20px; }
+.lead { color: var(--muted); font-size: 18px; }
+.eyebrow { letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; font-size: 13px; color: var(--accent); }
+.stack { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 440px) { .row2 { grid-template-columns: 1fr; } }
+
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.note { background: var(--accent-soft); border-radius: 10px; padding: 14px 16px; font-size: 16px; }
+.note b { font-weight: 700; }
+.plain-list { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; }
+
+/* Fields */
+.field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+label, .lbl { font-weight: 700; font-size: 16px; }
+.hint { font-size: 15px; color: var(--muted); }
+input[type=text], input[type=tel], input[type=date], textarea {
+  width: 100%; min-height: 50px; padding: 11px 13px; font: inherit; font-size: 17px;
+  color: var(--ink); background: var(--surface); border: 1.5px solid var(--line); border-radius: 8px;
+  -webkit-appearance: none; appearance: none;
+}
+textarea { min-height: 96px; resize: vertical; }
+input::placeholder, textarea::placeholder { color: var(--muted); opacity: .75; }
+.field.invalid > input, .field.invalid > textarea, .field.invalid .sigwrap, .field.invalid .choice button { border-color: var(--danger); }
+.err { color: var(--danger); font-size: 15.5px; font-weight: 700; }
+.field.invalid > .lbl, .field.invalid > label { color: var(--danger); }
+.check { display: flex; gap: 12px; align-items: flex-start; font-weight: 400; font-size: 17px; cursor: pointer; }
+.check input { width: 26px; height: 26px; margin: 2px 0 0; flex: 0 0 auto; accent-color: var(--accent); }
+
+/* Yes / No buttons */
+.choice { display: flex; gap: 8px; }
+.choice button {
+  flex: 1 1 0; min-width: 0; min-height: 50px; padding: 8px 14px; font: inherit; font-weight: 700; font-size: 17px;
+  color: var(--ink); background: var(--surface); border: 1.5px solid var(--line); border-radius: 8px; cursor: pointer;
+}
+.choice button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.choice.wrap { flex-wrap: wrap; }
+.choice.wrap button { flex: 0 1 auto; padding-inline: 16px; }
+.choice.small { flex: 0 0 auto; }
+.choice.small button { flex: 0 0 auto; min-width: 66px; min-height: 46px; }
+
+/* Questions */
+.q { display: flex; flex-direction: column; gap: 12px; }
+.q-head { display: flex; gap: 12px; align-items: flex-start; }
+.q-num { flex: 0 0 auto; width: 30px; height: 30px; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); font-weight: 700; border-radius: 50%; font-size: 15px; }
+.q-text { min-width: 0; }
+.subrow { display: flex; justify-content: space-between; align-items: center; gap: 10px 14px; flex-wrap: wrap; padding-block: 10px; border-top: 1px solid var(--line); }
+.subrow:first-of-type { border-top: 0; }
+.subrow .name { min-width: 0; flex: 1 1 150px; }
+
+/* Signature */
+.sigwrap { position: relative; border: 1.5px solid var(--line); border-radius: 8px; background: var(--surface); height: 180px; overflow: hidden; }
+.sigwrap canvas { display: block; width: 100%; height: 180px; touch-action: none; cursor: crosshair; }
+.sig-ph { position: absolute; inset: 0; display: grid; place-items: center; color: var(--muted); pointer-events: none; font-size: 16px; }
+.sig-line { position: absolute; left: 16px; right: 16px; bottom: 38px; border-bottom: 1.5px dashed var(--line); pointer-events: none; }
+.btn-line { align-self: flex-start; min-height: 44px; padding: 8px 16px; font: inherit; font-weight: 700; font-size: 16px; color: var(--ink); background: transparent; border: 1.5px solid var(--line); border-radius: 8px; cursor: pointer; }
+
+/* Declaration */
+.decl { border-left: 4px solid var(--accent); padding: 4px 0 4px 14px; display: flex; flex-direction: column; gap: 12px; font-size: 16.5px; }
+
+/* Summary */
+.sum-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.sum-head button { min-height: 40px; padding: 4px 14px; font: inherit; font-weight: 700; font-size: 15px; color: var(--accent); background: transparent; border: 1.5px solid var(--line); border-radius: 8px; cursor: pointer; }
+dl.sum { margin: 0; display: flex; flex-direction: column; }
+dl.sum > div { display: grid; grid-template-columns: 112px 1fr; gap: 4px 12px; padding-block: 8px; border-top: 1px solid var(--line); }
+dl.sum > div:first-child { border-top: 0; }
+dl.sum dt { color: var(--muted); font-size: 15px; }
+dl.sum dd { margin: 0; min-width: 0; overflow-wrap: anywhere; white-space: pre-wrap; }
+@media (max-width: 420px) { dl.sum > div { grid-template-columns: 1fr; } }
+.sum-sig { max-height: 70px; max-width: 100%; background: #fff; border: 1px solid var(--line); border-radius: 6px; padding: 4px; }
+
+.status { border-radius: 10px; padding: 14px 16px; font-weight: 700; }
+.status.ok { background: var(--ok-soft); color: var(--ok); }
+.status.bad { background: var(--danger-soft); color: var(--danger); }
+.status.info { background: var(--accent-soft); color: var(--ink); }
+.addr { font-weight: 700; overflow-wrap: anywhere; user-select: all; -webkit-user-select: all; }
+.inline-btn { min-height: 44px; padding: 6px 14px; font: inherit; font-weight: 700; font-size: 16px; color: var(--accent); background: transparent; border: 1.5px solid var(--line); border-radius: 8px; cursor: pointer; }
+.link-btn { background: none; border: 0; padding: 8px 0; font: inherit; color: var(--muted); text-decoration: underline; cursor: pointer; text-align: left; font-size: 16px; }
+
+details { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
+summary { padding: 14px 16px; font-weight: 700; cursor: pointer; }
+details > .body { padding: 0 16px 16px; display: flex; flex-direction: column; gap: 12px; font-size: 16px; }
+
+/* Bottom bar */
+.bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--bg); border-top: 1px solid var(--line); padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px)); }
+.bar-in { max-width: 640px; margin: 0 auto; display: flex; gap: 10px; }
+.bar button { min-height: 54px; font: inherit; font-weight: 700; font-size: 18px; border-radius: 10px; cursor: pointer; }
+#back { flex: 0 0 auto; padding-inline: 20px; color: var(--ink); background: var(--surface); border: 1.5px solid var(--line); }
+#next { flex: 1 1 auto; color: var(--accent-ink); background: var(--accent); border: 0; }
+#next:disabled { opacity: .6; cursor: default; }
+</style>
+
+<header class="top">
+  <div class="top-in">
+    <div class="top-row"><span class="tag">Confidential</span><span id="where" aria-live="polite">Start</span></div>
+    <div class="track" role="progressbar" aria-label="Progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="track"><div class="fill" id="fill"></div></div>
+  </div>
+</header>
+
+<main class="app">
+
+  <!-- 0 Welcome -->
+  <section class="step" data-step="0">
+    <div class="stack">
+      <p class="eyebrow">Employment health assessment</p>
+      <h1>Fill in your health form on your phone</h1>
+      <p class="lead">This is a phone-friendly copy of the Employment Health Assessment Form. It takes about 10 minutes. At the end you sign with your finger and save it as a PDF.</p>
+    </div>
+    <div class="card">
+      <h3>Have these to hand</h3>
+      <ul class="plain-list">
+        <li>Your GP's name and address</li>
+        <li>Your last two jobs, with hours per week and dates</li>
+        <li>The job title of the new post</li>
+      </ul>
+    </div>
+    <div class="note">Nothing is sent anywhere by this page. Your answers are kept on this phone as you go, so you can close it and come back later.</div>
+    <details>
+      <summary>Read the introduction from the form first</summary>
+      <div class="body">
+        <p><b>Working Health Solutions</b> is an independent organisation that provides Occupational Health Services for the University of Chichester.</p>
+        <p>Thank you for completing the health assessment form. We use this form to make sure, as far as possible, that you are fit to do the requirements of the post, to protect yours and others' health and safety, and to identify any adjustments that may be needed to support you in your role.</p>
+        <p>Questions asked relate to your past and present health, and medical treatment that could result in any impairments, which may have implications for health and safety. Unless otherwise agreed with you, the information you provide will remain confidential to the Occupational Health Advisors and the University's Human Resources Department. It is stored in line with Data Protection legislation. More information: <a href="https://www.chi.ac.uk/about-us/policies-and-statements/data-protection" target="_blank" rel="noopener">University of Chichester data protection</a>.</p>
+        <p>If you have any difficulties completing this form or wish to discuss any issues in a confidential setting, please contact the Human Resources Department on <b>01243 816114</b>.</p>
+        <p>Everyone completes Sections 1 and 2. If your role may involve night work, please also complete Section 3.</p>
+        <p>Once completed, return the form to the University of Chichester Human Resources Department. If you answered yes to any question in Section 2 or 3, the whole form may be forwarded to the Occupational Health Advisors for further review.</p>
+        <p>If you would like the content of this form to be reviewed confidentially by Occupational Health, send it directly to the Occupational Health team: <b>admin@hampshirehealth.com</b></p>
+        <p>After your form has been reviewed you may be asked to attend an appointment with Occupational Health, or you may be contacted by telephone.</p>
+      </div>
+    </details>
+    <button type="button" class="link-btn" id="clear-start" hidden>Clear my saved answers and start again</button>
+  </section>
+
+  <!-- 1 About you -->
+  <section class="step" data-step="1" hidden>
+    <div class="stack">
+      <p class="eyebrow">Section 1 · Personal details</p>
+      <h2>About you</h2>
+    </div>
+    <div class="field" data-field="title">
+      <span class="lbl" id="l-title">Title</span>
+      <div class="choice wrap" role="group" aria-labelledby="l-title" data-choice="title"></div>
+      <p class="err" hidden></p>
+    </div>
+    <div class="field" data-field="titleOther" data-show="title=Other" hidden>
+      <label for="f-titleOther">Your title</label>
+      <input type="text" id="f-titleOther" data-k="titleOther" autocomplete="honorific-prefix">
+      <p class="err" hidden></p>
+    </div>
+    <div class="field" data-field="first">
+      <label for="f-first">First name(s)</label>
+      <input type="text" id="f-first" data-k="first" autocomplete="given-name" autocapitalize="words">
+      <p class="err" hidden></p>
+    </div>
+    <div class="field" data-field="last">
+      <label for="f-last">Last name</label>
+      <input type="text" id="f-last" data-k="last" autocomplete="family-name" autocapitalize="words">
+      <p class="err" hidden></p>
+    </div>
+    <div class="field" data-field="dob">
+      <label for="f-dob">Date of birth</label>
+      <input type="date" id="f-dob" data-k="dob" autocomplete="bday">
+      <p class="err" hidden></p>
+    </div>
+    <div class="field" data-field="addr1">
+      <label for="f-addr1">Address</label>
+      <input type="text" id="f-addr1" data-k="addr1" autocomplete="address-line1" placeholder="House number and street">
+      <p class="err" hidden></p>
+    </div>
+    <div class="field" data-field="addr2">
+      <label for="f-addr2" class="hint" style="font-weight:400">Address line 2 (if you need it)</label>
+      <input type="text" id="f-addr2" data-k="addr2" autocomplete="address-line2">
+    </div>
+    <div class="row2">
+      <div class="field" data-field="town">
+        <label for="f-town">Town or city</label>
+        <input type="text" id="f-town" data-k="town" autocomplete="address-level2" autocapitalize="words">
+        <p class="err" hidden></p>
+      </div>
+      <div class="field" data-field="postcode">
+        <label for="f-postcode">Postcode</label>
+        <input type="text" id="f-postcode" data-k="postcode" autocomplete="postal-code" autocapitalize="characters">
+        <p class="err" hidden></p>
+      </div>
+    </div>
+    <div class="field" data-field="phone">
+      <label for="f-phone">Telephone number</label>
+      <input type="tel" id="f-phone" data-k="phone" autocomplete="tel" inputmode="tel">
+      <p class="err" hidden></p>
+    </div>
+    <div class="card">
+      <p>The Occupational Health Advisor may need to phone you to clear up some points, so you don't have to attend in person. Which number can they reach you on between <b>9am and 4.30pm, Monday to Friday</b>?</p>
+      <label class="check"><input type="checkbox" id="f-phoneSame" data-k="phoneSame"> <span>Use the same number as above</span></label>
+      <div class="field" data-field="phone2" data-hide="phoneSame=true">
+        <label for="f-phone2">Number for weekday calls</label>
+        <input type="tel" id="f-phone2" data-k="phone2" inputmode="tel">
+        <p class="err" hidden></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 GP and jobs -->
+  <section class="step" data-step="2" hidden>
+    <div class="stack">
+      <p class="eyebrow">Section 1 · Personal details</p>
+      <h2>Your doctor and your last two jobs</h2>
+    </div>
+    <div class="field" data-field="gp">
+      <label for="f-gp">Name and address of your General Practitioner (family doctor)</label>
+      <textarea id="f-gp" data-k="gp" rows="4" placeholder="Surgery name, then address"></textarea>
+      <p class="hint">If you aren't registered with a GP, write that here.</p>
+      <p class="err" hidden></p>
+    </div>
+    <div class="stack">
+      <h3>Employment history</h3>
+      <p class="hint">List your last two occupations, most recent first. If you've only had one, leave the second blank.</p>
+    </div>
+    <div class="card">
+      <h3>Most recent job</h3>
+      <div class="field" data-field="e1org"><label for="f-e1org">Organisation name</label><input type="text" id="f-e1org" data-k="e1org" autocapitalize="words"><p class="err" hidden></p></div>
+      <div class="field" data-field="e1job"><label for="f-e1job">Job title</label><input type="text" id="f-e1job" data-k="e1job" autocapitalize="words"><p class="err" hidden></p></div>
+      <div class="row2">
+        <div class="field" data-field="e1hrs"><label for="f-e1hrs">Hours per week</label><input type="text" id="f-e1hrs" data-k="e1hrs" placeholder="e.g. 20"><p class="err" hidden></p></div>
+        <div class="field" data-field="e1dates"><label for="f-e1dates">Dates from – to</label><input type="text" id="f-e1dates" data-k="e1dates" placeholder="e.g. Sep 2023 – now"><p class="err" hidden></p></div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>The job before that</h3>
+      <div class="field"><label for="f-e2org">Organisation name</label><input type="text" id="f-e2org" data-k="e2org" autocapitalize="words"></div>
+      <div class="field"><label for="f-e2job">Job title</label><input type="text" id="f-e2job" data-k="e2job" autocapitalize="words"></div>
+      <div class="row2">
+        <div class="field"><label for="f-e2hrs">Hours per week</label><input type="text" id="f-e2hrs" data-k="e2hrs"></div>
+        <div class="field"><label for="f-e2dates">Dates from – to</label><input type="text" id="f-e2dates" data-k="e2dates"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 Safety to work -->
+  <section class="step" data-step="3" hidden>
+    <div class="stack">
+      <p class="eyebrow">Section 2 · Safety to work</p>
+      <h2>Please answer all eight questions</h2>
+      <p class="hint">If you answer Yes, a box opens so you can give details.</p>
+    </div>
+    <div class="stack" id="safety-list"></div>
+  </section>
+
+  <!-- 4 Night work -->
+  <section class="step" data-step="4" hidden>
+    <div class="stack">
+      <p class="eyebrow">Section 3 · Night work</p>
+      <h2>Night work</h2>
+      <p class="hint">Only for people whose work may involve night work. The government defines night work as regularly working for at least three hours during night time, including the time between 11pm and 6am.</p>
+    </div>
+    <div class="card">
+      <div class="field" data-field="nightRole">
+        <span class="lbl" id="l-nightRole">Does the new job involve night work, or might it?</span>
+        <div class="choice" role="group" aria-labelledby="l-nightRole" data-choice="nightRole"></div>
+        <p class="hint">Check your job offer or ask the employer if you're not sure.</p>
+        <p class="err" hidden></p>
+      </div>
+    </div>
+    <div class="stack" id="night-list" data-show="nightRole=yes" hidden></div>
+  </section>
+
+  <!-- 5 Declaration -->
+  <section class="step" data-step="5" hidden>
+    <div class="stack">
+      <p class="eyebrow">Declaration</p>
+      <h2>Read, then sign</h2>
+    </div>
+    <div class="decl">
+      <p>I declare that the following statements and information are true, to the best of my knowledge and belief. I realise any false or incomplete statement could result in my offer of employment being withdrawn, or my dismissal where information is not discovered by the University prior to the commencement of my employment and which affects my ability to undertake the duties of the post.</p>
+      <p>I give consent to be medically examined, if required by the Occupational Health Physician. I understand that no medical details will be divulged to any person outside the Occupational Health Service without my written permission, but I consent to an opinion about my fitness to work being given to the University's Human Resources Department and my line manager.</p>
+    </div>
+    <div class="field" data-field="fullName">
+      <label for="f-fullName">Full name</label>
+      <input type="text" id="f-fullName" data-k="fullName" autocomplete="name" autocapitalize="words">
+      <p class="err" hidden></p>
+    </div>
+    <div class="field" data-field="postTitle">
+      <label for="f-postTitle">Post title</label>
+      <input type="text" id="f-postTitle" data-k="postTitle" autocapitalize="words" placeholder="The job you've been offered">
+      <p class="err" hidden></p>
+    </div>
+    <div class="field" data-field="sig">
+      <span class="lbl" id="l-sig">Signature</span>
+      <div class="sigwrap" id="sigwrap">
+        <canvas id="sig" aria-labelledby="l-sig" role="img"></canvas>
+        <div class="sig-line"></div>
+        <div class="sig-ph" id="sig-ph">Sign here with your finger</div>
+      </div>
+      <button type="button" class="btn-line" id="sig-clear">Clear signature</button>
+      <p class="err" hidden></p>
+    </div>
+    <div class="field" data-field="signDate">
+      <label for="f-signDate">Date</label>
+      <input type="date" id="f-signDate" data-k="signDate">
+      <p class="err" hidden></p>
+    </div>
+    <div class="field" data-field="agree">
+      <label class="check"><input type="checkbox" id="f-agree" data-k="agree"> <span>I have read the declaration and I agree to it.</span></label>
+      <p class="err" hidden></p>
+    </div>
+  </section>
+
+  <!-- 6 Check and save -->
+  <section class="step" data-step="6" hidden>
+    <div class="stack">
+      <p class="eyebrow">Last step</p>
+      <h2>Check your answers, then save</h2>
+      <p class="hint">Use Change on any section to go back and edit it.</p>
+    </div>
+    <div class="stack" id="summary"></div>
+    <div class="card">
+      <h3>Where it goes next</h3>
+      <p>The form says to return it to the University of Chichester Human Resources Department. If you would rather Occupational Health review it confidentially, the form says to send it directly to:</p>
+      <p class="addr" id="oh-email">admin@hampshirehealth.com</p>
+      <div><button type="button" class="inline-btn" id="copy-email">Copy address</button></div>
+      <p class="hint">Need help? Human Resources: 01243 816114</p>
+    </div>
+    <div id="save-msg" role="status" aria-live="polite" hidden></div>
+    <div id="after-save" class="stack" hidden>
+      <div class="card">
+        <h3>Now send the PDF</h3>
+        <p>Open the saved PDF from your Files or Downloads, or use the share sheet that just appeared, and send it to the person who is helping you.</p>
+        <p class="hint">Once it's sent you can clear your answers from this phone.</p>
+        <div id="clear-wrap" class="stack">
+          <button type="button" class="inline-btn" id="clear-ask" style="align-self:flex-start">Clear my answers from this phone</button>
+          <div id="clear-sure" class="stack" hidden>
+            <p><b>This removes everything you've typed, including your signature.</b></p>
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+              <button type="button" class="inline-btn" id="clear-yes" style="color:var(--danger)">Yes, clear everything</button>
+              <button type="button" class="inline-btn" id="clear-no" style="color:var(--ink)">Keep it</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<nav class="bar" aria-label="Form navigation">
+  <div class="bar-in">
+    <button type="button" id="back" hidden>Back</button>
+    <button type="button" id="next">Start</button>
+  </div>
+</nav>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  /* ---------- Content ---------- */
+  var STEPS = [
+    { label: 'Start', next: 'Start' },
+    { label: 'About you', next: 'Next' },
+    { label: 'Doctor and jobs', next: 'Next' },
+    { label: 'Safety to work', next: 'Next' },
+    { label: 'Night work', next: 'Next' },
+    { label: 'Declaration', next: 'Check my answers' },
+    { label: 'Check and save', next: 'Save as PDF' }
+  ];
+  var TITLES = ['Dr', 'Mr', 'Mrs', 'Ms', 'Miss', 'Professor', 'Other'];
+  var SAFETY = [
+    { q: 'Have you, or have you had any physical or mental health condition(s), which may affect you undertaking this role?' },
+    { q: 'Do you have any health conditions causing you difficulty with standing, walking, bending, lifting or stair climbing?' },
+    { q: 'Do you or have you ever suffered from a work related illness?' },
+    { q: 'Do you suffer from any health condition(s) that would prevent you from driving safely on work business?' },
+    { q: 'If your new post requires you to work on your own or at heights, in restricted space, in extreme temperatures or with breathing apparatus - do you have any health condition that would prevent you from undertaking it safely?', na: true },
+    { q: 'If your new post requires you to work with vibratory tools, would this cause you any health problem?', na: true },
+    { q: 'Are you having, or waiting for treatment or investigations of any kind at present?' },
+    { q: 'Is there anything else you wanted to tell us about that would impact your capacity to undertake your new post?' }
+  ];
+  var NIGHT_SYMPTOMS = [
+    ['sleep', 'Sleep problems'], ['vision', 'Vision problems'], ['digest', 'Digestive or stomach problems'],
+    ['weight', 'Weight loss/gain'], ['chest', 'Chest/heart problems'], ['irrit', 'Irritability'],
+    ['tired', 'Extreme tiredness'], ['diabetes', 'Diabetes'], ['epilepsy', 'Epilepsy']
+  ];
+  var KEY = 'health-assessment-form-v1';
+
+  /* ---------- State ---------- */
+  var S = { step: 0 };
+  function load() {
+    try { var r = localStorage.getItem(KEY); if (r) { var o = JSON.parse(r); if (o && typeof o === 'object') S = o; } } catch (e) {}
+    if (typeof S.step !== 'number') S.step = 0;
+    if (S.phoneSame === undefined) S.phoneSame = true;
+  }
+  function persist() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+  function $(s, r) { return (r || document).querySelector(s); }
+  function $$(s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); }
+  function todayISO() {
+    var d = new Date(), p = function (n) { return (n < 10 ? '0' : '') + n; };
+    return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
+  }
+  function fmtDate(iso) {
+    var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || '');
+    return m ? m[3] + '/' + m[2] + '/' + m[1] : (iso || '');
+  }
+  function ynLabel(v) { return v === 'yes' ? 'Yes' : v === 'no' ? 'No' : v === 'na' ? 'N/A' : ''; }
+  function has(k) { return typeof S[k] === 'string' && S[k].trim() !== ''; }
+
+  /* ---------- Build repeated parts ---------- */
+  function choiceHTML(key, opts, cls) {
+    var h = '<div class="choice ' + (cls || '') + '" role="group" data-choice="' + key + '">';
+    opts.forEach(function (o) { h += '<button type="button" data-v="' + o[0] + '" aria-pressed="false">' + o[1] + '</button>'; });
+    return h + '</div>';
+  }
+  var YN = [['yes', 'Yes'], ['no', 'No']];
+  var YNNA = [['yes', 'Yes'], ['no', 'No'], ['na', 'N/A']];
+
+  function buildSafety() {
+    var h = '';
+    SAFETY.forEach(function (it, i) {
+      var n = i + 1, k = 'q' + n;
+      h += '<div class="card q">' +
+        '<div class="field" data-field="' + k + '">' +
+          '<div class="q-head"><span class="q-num">' + n + '</span><p class="q-text" id="l-' + k + '">' + it.q + '</p></div>' +
+          choiceHTML(k, it.na ? YNNA : YN).replace('role="group"', 'role="group" aria-labelledby="l-' + k + '"') +
+          '<p class="err" hidden></p>' +
+        '</div>' +
+        '<div class="field" data-field="' + k + 'd" data-show="' + k + '=yes" hidden>' +
+          '<label for="f-' + k + 'd">Please give details</label>' +
+          '<textarea id="f-' + k + 'd" data-k="' + k + 'd" rows="3"></textarea>' +
+          '<p class="err" hidden></p>' +
+        '</div>' +
+      '</div>';
+    });
+    $('#safety-list').innerHTML = h;
+  }
+
+  function buildNight() {
+    var h = '';
+    h += '<div class="card q"><div class="field" data-field="n1"><div class="q-head"><span class="q-num">1</span><p class="q-text" id="l-n1">Have you ever worked at night before?</p></div>' +
+      choiceHTML('n1', YN).replace('role="group"', 'role="group" aria-labelledby="l-n1"') + '<p class="err" hidden></p></div></div>';
+    h += '<div class="card q" data-show="n1=yes" hidden><div class="q-head"><span class="q-num">2</span><p class="q-text">During that time, did you ever suffer from:</p></div><div>';
+    NIGHT_SYMPTOMS.forEach(function (s) {
+      var k = 'n2' + s[0];
+      h += '<div class="field subrow" data-field="' + k + '" style="flex-direction:row"><span class="name" id="l-' + k + '">' + s[1] + '</span>' +
+        choiceHTML(k, YN, 'small').replace('role="group"', 'role="group" aria-labelledby="l-' + k + '"') +
+        '<p class="err" hidden style="flex:1 1 100%"></p></div>';
+    });
+    h += '</div></div>';
+    h += '<div class="card q"><div class="field" data-field="n3"><div class="q-head"><span class="q-num">3</span><p class="q-text" id="l-n3">Do you experience visual difficulties driving or working in poorly lit areas or at night time?</p></div>' +
+      choiceHTML('n3', YN).replace('role="group"', 'role="group" aria-labelledby="l-n3"') + '<p class="err" hidden></p></div></div>';
+    h += '<div class="card q"><div class="field" data-field="n4"><div class="q-head"><span class="q-num">4</span><p class="q-text" id="l-n4">Do you take any medication at a specific time?</p></div>' +
+      choiceHTML('n4', YN).replace('role="group"', 'role="group" aria-labelledby="l-n4"') + '<p class="err" hidden></p></div>' +
+      '<div class="field" data-field="n4d" data-show="n4=yes" hidden><label for="f-n4d">Name of medication, dose, purpose and time taken</label><textarea id="f-n4d" data-k="n4d" rows="3"></textarea><p class="err" hidden></p></div></div>';
+    h += '<div class="card q"><div class="field" data-field="n5"><div class="q-head"><span class="q-num">5</span><p class="q-text" id="l-n5">Do you have any concerns about working during the night as defined above?</p></div>' +
+      choiceHTML('n5', YN).replace('role="group"', 'role="group" aria-labelledby="l-n5"') + '<p class="err" hidden></p></div>' +
+      '<div class="field" data-show="n5=yes" hidden><label for="f-n5d">Tell us about your concerns (optional)</label><textarea id="f-n5d" data-k="n5d" rows="3"></textarea></div></div>';
+    $('#night-list').innerHTML = h;
+  }
+
+  function buildSimpleChoices() {
+    $('[data-choice="title"]').innerHTML = TITLES.map(function (t) { return '<button type="button" data-v="' + t + '" aria-pressed="false">' + t + '</button>'; }).join('');
+    $('[data-choice="nightRole"]').innerHTML =
+      '<button type="button" data-v="yes" aria-pressed="false">Yes, or it might</button><button type="button" data-v="no" aria-pressed="false">No</button>';
+  }
+
+  /* ---------- Binding ---------- */
+  function refreshChoices() {
+    $$('.choice').forEach(function (g) {
+      var v = S[g.dataset.choice];
+      $$('button', g).forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.v === v)); });
+    });
+  }
+  function refreshConditionals() {
+    $$('[data-show]').forEach(function (el) {
+      var p = el.dataset.show.split('=');
+      el.hidden = String(S[p[0]]) !== p[1];
+    });
+    $$('[data-hide]').forEach(function (el) {
+      var p = el.dataset.hide.split('=');
+      el.hidden = String(S[p[0]]) === p[1];
+    });
+  }
+  function fieldOf(k) { return $('[data-field="' + k + '"]'); }
+  function clearErr(k) {
+    var f = fieldOf(k); if (!f) return;
+    f.classList.remove('invalid');
+    var e = $('.err', f); if (e) e.hidden = true;
+  }
+  function showErr(k, msg) {
+    var f = fieldOf(k); if (!f) return;
+    f.classList.add('invalid');
+    var e = $('.err', f); if (e) { e.textContent = msg; e.hidden = false; }
+  }
+  function clearAllErr() { $$('.field.invalid').forEach(function (f) { f.classList.remove('invalid'); }); $$('.err').forEach(function (e) { e.hidden = true; }); }
+
+  function bindInputs() {
+    $$('[data-k]').forEach(function (el) {
+      var k = el.dataset.k;
+      if (el.type === 'checkbox') el.checked = !!S[k];
+      else if (typeof S[k] === 'string') el.value = S[k];
+      el.addEventListener('input', function () {
+        S[k] = el.type === 'checkbox' ? el.checked : el.value;
+        persist(); clearErr(k); refreshConditionals();
+      });
+    });
+    document.addEventListener('click', function (ev) {
+      var b = ev.target.closest && ev.target.closest('.choice button');
+      if (!b) return;
+      var key = b.parentElement.dataset.choice;
+      S[key] = b.dataset.v;
+      persist(); clearErr(key); refreshChoices(); refreshConditionals();
+    });
+  }
+
+  /* ---------- Validation ---------- */
+  var REQ = 'Please answer this.';
+  function validate(step) {
+    var errs = [];
+    function need(k, msg) { if (!has(k)) errs.push([k, msg || 'Please fill this in.']); }
+    function choose(k) { if (!S[k]) errs.push([k, REQ]); }
+    if (step === 1) {
+      choose('title');
+      if (S.title === 'Other') need('titleOther', 'Please type your title.');
+      need('first'); need('last');
+      if (!has('dob')) errs.push(['dob', 'Please enter your date of birth.']);
+      else if (S.dob > todayISO() || S.dob < '1900-01-01') errs.push(['dob', 'That date doesn’t look right.']);
+      need('addr1', 'Please enter the first line of your address.'); need('town'); need('postcode');
+      need('phone', 'Please enter a telephone number.');
+      if (!S.phoneSame) need('phone2', 'Please enter a number for weekday calls.');
+    } else if (step === 2) {
+      need('gp', 'Please enter your GP’s details, or say you aren’t registered.');
+      need('e1org'); need('e1job'); need('e1hrs'); need('e1dates');
+    } else if (step === 3) {
+      SAFETY.forEach(function (it, i) {
+        var k = 'q' + (i + 1);
+        choose(k);
+        if (S[k] === 'yes') need(k + 'd', 'You answered Yes, so please give some details.');
+      });
+    } else if (step === 4) {
+      choose('nightRole');
+      if (S.nightRole === 'yes') {
+        choose('n1');
+        if (S.n1 === 'yes') NIGHT_SYMPTOMS.forEach(function (s) { choose('n2' + s[0]); });
+        choose('n3'); choose('n4');
+        if (S.n4 === 'yes') need('n4d', 'Please give the medication, dose, purpose and time taken.');
+        choose('n5');
+      }
+    } else if (step === 5) {
+      need('fullName'); need('postTitle', 'Please enter the title of the post.');
+      if (!S.sig || !S.sig.length) errs.push(['sig', 'Please sign in the box.']);
+      need('signDate', 'Please choose the date.');
+      if (!S.agree) errs.push(['agree', 'Please tick to confirm you agree.']);
+    }
+    return errs;
+  }
+  function firstBadStep() {
+    for (var s = 1; s <= 5; s++) { var e = validate(s); if (e.length) return { step: s, errs: e }; }
+    return null;
+  }
+  function applyErrors(errs) {
+    clearAllErr();
+    errs.forEach(function (e) { showErr(e[0], e[1]); });
+    var first = errs.length && fieldOf(errs[0][0]);
+    if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  /* ---------- Navigation ---------- */
+  function go(n) {
+    S.step = Math.max(0, Math.min(STEPS.length - 1, n));
+    persist();
+    $$('.step').forEach(function (s) { s.hidden = Number(s.dataset.step) !== S.step; });
+    $('#where').textContent = S.step === 0 ? 'Start' : STEPS[S.step].label + ' · ' + (S.step + 1) + ' of ' + STEPS.length;
+    var pct = Math.round(S.step / (STEPS.length - 1) * 100);
+    $('#fill').style.width = pct + '%';
+    $('#track').setAttribute('aria-valuenow', String(pct));
+    $('#back').hidden = S.step === 0;
+    $('#next').textContent = STEPS[S.step].next;
+    $('#next').disabled = false;
+    clearAllErr();
+    if (S.step === 5) enterSign();
+    if (S.step === 6) { renderSummary(); setSaveMsg(null); $('#after-save').hidden = true; }
+    window.scrollTo(0, 0);
+  }
+
+  function enterSign() {
+    if (!has('fullName')) { S.fullName = ((S.first || '') + ' ' + (S.last || '')).trim(); $('#f-fullName').value = S.fullName; }
+    if (!has('signDate')) { S.signDate = todayISO(); $('#f-signDate').value = S.signDate; }
+    persist();
+    setTimeout(sizeCanvas, 0);
+  }
+
+  /* ---------- Signature pad ---------- */
+  var SIG_H = 180;
+  var cv, ctx, drawing = false, cur = null;
+  function inkColour() { return getComputedStyle(document.documentElement).getPropertyValue('--ink').trim() || '#000'; }
+  function sizeCanvas() {
+    var w = $('#sigwrap').clientWidth; if (!w) return;
+    var dpr = window.devicePixelRatio || 1;
+    cv.width = Math.round(w * dpr); cv.height = Math.round(SIG_H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    redraw();
+  }
+  function redraw() {
+    if (!ctx) return;
+    ctx.clearRect(0, 0, cv.width, cv.height);
+    ctx.lineWidth = 2.6; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.strokeStyle = inkColour(); ctx.fillStyle = inkColour();
+    (S.sig || []).forEach(function (st) {
+      if (st.length === 1) { ctx.beginPath(); ctx.arc(st[0][0] * SIG_H, st[0][1] * SIG_H, 1.4, 0, 6.3); ctx.fill(); return; }
+      ctx.beginPath();
+      st.forEach(function (p, i) { if (i) ctx.lineTo(p[0] * SIG_H, p[1] * SIG_H); else ctx.moveTo(p[0] * SIG_H, p[1] * SIG_H); });
+      ctx.stroke();
+    });
+    $('#sig-ph').hidden = !!(S.sig && S.sig.length);
+  }
+  function pt(ev) {
+    var r = cv.getBoundingClientRect();
+    return [Math.round((ev.clientX - r.left) / SIG_H * 1000) / 1000, Math.round((ev.clientY - r.top) / SIG_H * 1000) / 1000];
+  }
+  function bindSignature() {
+    cv = $('#sig'); ctx = cv.getContext('2d');
+    cv.addEventListener('pointerdown', function (ev) {
+      ev.preventDefault();
+      try { cv.setPointerCapture(ev.pointerId); } catch (e) {}
+      drawing = true; cur = [pt(ev)];
+      if (!S.sig) S.sig = [];
+      S.sig.push(cur); clearErr('sig'); redraw();
+    });
+    cv.addEventListener('pointermove', function (ev) {
+      if (!drawing) return;
+      ev.preventDefault();
+      var p = pt(ev), last = cur[cur.length - 1];
+      if (Math.abs(p[0] - last[0]) + Math.abs(p[1] - last[1]) < 0.004) return;
+      cur.push(p);
+      var n = cur.length;
+      if (n > 1) {
+        ctx.lineWidth = 2.6; ctx.lineCap = 'round'; ctx.strokeStyle = inkColour();
+        ctx.beginPath(); ctx.moveTo(cur[n - 2][0] * SIG_H, cur[n - 2][1] * SIG_H); ctx.lineTo(p[0] * SIG_H, p[1] * SIG_H); ctx.stroke();
+      }
+    });
+    function end() { if (!drawing) return; drawing = false; cur = null; persist(); redraw(); }
+    cv.addEventListener('pointerup', end);
+    cv.addEventListener('pointercancel', end);
+    cv.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+    $('#sig-clear').addEventListener('click', function () { S.sig = []; persist(); redraw(); });
+    window.addEventListener('resize', function () { if (S.step === 5) sizeCanvas(); });
+    try { window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', redraw); } catch (e) {}
+  }
+  function signaturePng() {
+    var st = S.sig || []; if (!st.length) return null;
+    var x0 = 9e9, y0 = 9e9, x1 = -9e9, y1 = -9e9;
+    st.forEach(function (s) { s.forEach(function (p) { x0 = Math.min(x0, p[0]); x1 = Math.max(x1, p[0]); y0 = Math.min(y0, p[1]); y1 = Math.max(y1, p[1]); }); });
+    var pad = 0.08; x0 -= pad; y0 -= pad; x1 += pad; y1 += pad;
+    var sc = 320, w = Math.max(60, Math.round((x1 - x0) * sc)), h = Math.max(30, Math.round((y1 - y0) * sc));
+    var c = document.createElement('canvas'); c.width = w; c.height = h;
+    var g = c.getContext('2d'); g.lineWidth = 5; g.lineCap = 'round'; g.lineJoin = 'round'; g.strokeStyle = '#000'; g.fillStyle = '#000';
+    st.forEach(function (s) {
+      if (s.length === 1) { g.beginPath(); g.arc((s[0][0] - x0) * sc, (s[0][1] - y0) * sc, 2.5, 0, 6.3); g.fill(); return; }
+      g.beginPath();
+      s.forEach(function (p, i) { var X = (p[0] - x0) * sc, Y = (p[1] - y0) * sc; if (i) g.lineTo(X, Y); else g.moveTo(X, Y); });
+      g.stroke();
+    });
+    return { url: c.toDataURL('image/png'), w: w, h: h };
+  }
+
+  /* ---------- Summary ---------- */
+  function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  function sumCard(title, step, rows) {
+    var c = el('div', 'card');
+    var hd = el('div', 'sum-head'); hd.appendChild(el('h3', '', title));
+    var b = el('button', '', 'Change'); b.type = 'button'; b.addEventListener('click', function () { go(step); });
+    hd.appendChild(b); c.appendChild(hd);
+    var dl = el('dl', 'sum');
+    rows.forEach(function (r) {
+      if (r[1] == null || r[1] === '') return;
+      var d = el('div'); d.appendChild(el('dt', '', r[0]));
+      var dd = el('dd'); if (r[1] instanceof Node) dd.appendChild(r[1]); else dd.textContent = r[1];
+      d.appendChild(dd); dl.appendChild(d);
+    });
+    c.appendChild(dl); return c;
+  }
+  function titleText() { return S.title === 'Other' ? (S.titleOther || '') : (S.title || ''); }
+  function renderSummary() {
+    var box = $('#summary'); box.innerHTML = '';
+    var addr = [S.addr1, S.addr2, S.town, S.postcode].filter(function (x) { return x && x.trim(); }).join('\n');
+    box.appendChild(sumCard('About you', 1, [
+      ['Name', (titleText() + ' ' + (S.first || '') + ' ' + (S.last || '')).trim()],
+      ['Date of birth', fmtDate(S.dob)], ['Address', addr], ['Telephone', S.phone],
+      ['Weekday calls', S.phoneSame ? 'Same number' : S.phone2]
+    ]));
+    var jobs = function (n) { return [S['e' + n + 'job'], S['e' + n + 'org'], S['e' + n + 'hrs'] && S['e' + n + 'hrs'] + ' hrs/week', S['e' + n + 'dates']].filter(Boolean).join(' · '); };
+    box.appendChild(sumCard('Doctor and jobs', 2, [['GP', S.gp], ['Most recent job', jobs(1)], ['Job before', jobs(2)]]));
+    var rows = [];
+    SAFETY.forEach(function (it, i) {
+      var k = 'q' + (i + 1), a = ynLabel(S[k]);
+      if (S[k] === 'yes' && S[k + 'd']) a += '\n' + S[k + 'd'];
+      rows.push(['Question ' + (i + 1), a]);
+    });
+    box.appendChild(sumCard('Safety to work', 3, rows));
+    var nr = [['Night work in this job', S.nightRole === 'yes' ? 'Yes, or it might' : 'No']];
+    if (S.nightRole === 'yes') {
+      nr.push(['Worked nights before', ynLabel(S.n1)]);
+      if (S.n1 === 'yes') {
+        var yes = NIGHT_SYMPTOMS.filter(function (s) { return S['n2' + s[0]] === 'yes'; }).map(function (s) { return s[1]; });
+        nr.push(['Suffered then', yes.length ? yes.join(', ') : 'None of these']);
+      }
+      nr.push(['Visual difficulties', ynLabel(S.n3)]);
+      nr.push(['Timed medication', ynLabel(S.n4) + (S.n4 === 'yes' && S.n4d ? '\n' + S.n4d : '')]);
+      nr.push(['Concerns', ynLabel(S.n5) + (S.n5 === 'yes' && S.n5d ? '\n' + S.n5d : '')]);
+    }
+    box.appendChild(sumCard('Night work', 4, nr));
+    var sp = signaturePng(), img = null;
+    if (sp) { img = el('img', 'sum-sig'); img.src = sp.url; img.alt = 'Your signature'; }
+    box.appendChild(sumCard('Declaration', 5, [['Full name', S.fullName], ['Post title', S.postTitle], ['Date', fmtDate(S.signDate)], ['Signature', img]]));
+  }
+
+  /* ---------- PDF ---------- */
+  function clean(s) {
+    s = String(s == null ? '' : s)
+      .replace(/[‘’‚′]/g, "'").replace(/[“”„]/g, '"')
+      .replace(/[–—−]/g, '-').replace(/…/g, '...').replace(/[   ]/g, ' ').replace(/\t/g, ' ').replace(/\r/g, '');
+    var out = '';
+    for (var i = 0; i < s.length; i++) {
+      var ch = s[i], c = s.charCodeAt(i);
+      if (c === 10 || (c >= 32 && c < 127) || (c >= 161 && c <= 255)) { out += ch; continue; }
+      var map = { '\u0141': 'L', '\u0142': 'l', '\u00D8': 'O', '\u00F8': 'o', '\u0110': 'D', '\u0111': 'd', '\u0131': 'i', '\u0152': 'OE', '\u0153': 'oe' };
+      if (map[ch]) { out += map[ch]; continue; }
+      var base = ch.normalize('NFD').replace(/[̀-ͯ]/g, '');
+      out += (base.length && base.charCodeAt(0) < 256 && base.charCodeAt(0) >= 32) ? base : '?';
+    }
+    return out;
+  }
+
+  function buildPdf() {
+    var jsPDF = window.jspdf.jsPDF;
+    var doc = new jsPDF({ unit: 'mm', format: 'a4', compress: true });
+    doc.setProperties({ title: 'Employment Health Assessment Form (completed)' });
+    var M = 16, W = 178, BOT = 278, y = 0;
+    var MM = 0.3528;
+    function LH(sz) { return sz * MM * 1.4; }
+    function txt(s, x, yy, size, bold, grey, opt) {
+      doc.setFont('helvetica', bold ? 'bold' : 'normal'); doc.setFontSize(size); doc.setTextColor(grey || 0);
+      doc.text(s, x, yy, opt);
+    }
+    function pageHead() { txt('CONFIDENTIAL', M, 12, 8.5, true, 80); }
+    function newPage() { doc.addPage(); pageHead(); y = 22; }
+    function need(h) { if (y + h > BOT) newPage(); }
+    function wrap(s, w, size, bold) { doc.setFont('helvetica', bold ? 'bold' : 'normal'); doc.setFontSize(size); return doc.splitTextToSize(clean(s), w); }
+    function para(s, o) {
+      o = o || {}; var size = o.size || 10, x = o.x == null ? M : o.x, w = o.w || W, gap = o.gap == null ? 3 : o.gap;
+      var ls = wrap(s, w, size, o.bold), lh = LH(size);
+      ls.forEach(function (l) { need(lh); txt(l, x, y + size * MM * 1.05, size, o.bold, o.grey, o.align ? { align: o.align } : undefined); y += lh; });
+      y += gap;
+    }
+    function h2(s) {
+      need(16); y += 2; txt(s, M, y + 5, 12.5, true); y += 7.5;
+      doc.setDrawColor(40); doc.setLineWidth(0.4); doc.line(M, y, M + W, y); y += 4;
+    }
+    function kv(label, value, lw) {
+      lw = lw || 46;
+      var v = clean(value) || '-', vl = wrap(v, W - lw - 2, 10, false), lh = LH(10);
+      var ll = wrap(label, lw - 4, 9, true), llh = LH(9);
+      var h = Math.max(ll.length * llh, vl.length * lh) + 2.6;
+      need(h);
+      ll.forEach(function (l, i) { txt(l, M, y + 3.7 + i * llh, 9, true, 70); });
+      vl.forEach(function (l, i) { txt(l, M + lw, y + 3.8 + i * lh, 10, false); });
+      y += h; doc.setDrawColor(200); doc.setLineWidth(0.2); doc.line(M, y - 0.6, M + W, y - 0.6);
+    }
+    function box(x, yy, on) {
+      doc.setDrawColor(40); doc.setLineWidth(0.35); doc.rect(x, yy, 4.2, 4.2);
+      if (on) { doc.setLineWidth(0.6); doc.line(x + 0.8, yy + 0.8, x + 3.4, yy + 3.4); doc.line(x + 3.4, yy + 0.8, x + 0.8, yy + 3.4); }
+    }
+    var X0 = M + W - 58, X1 = M + W - 39, X2 = M + W - 20;
+    function yn(yy, val, na) {
+      txt('Yes', X0, yy + 3.2, 9, false); box(X0 + 7, yy, val === 'yes');
+      txt('No', X1, yy + 3.2, 9, false); box(X1 + 6, yy, val === 'no');
+      if (na) { txt('N/A', X2, yy + 3.2, 9, false); box(X2 + 8, yy, val === 'na'); }
+    }
+    function qrow(num, text, val, na, indent) {
+      indent = indent || 0;
+      var ls = wrap(text, W - 70 - indent, 10, false), lh = LH(10), h = Math.max(ls.length * lh, 6) + 3;
+      need(h);
+      if (num) txt(num, M + indent, y + 3.7, 10, true);
+      ls.forEach(function (l, i) { txt(l, M + 8 + indent, y + 3.8 + i * lh, 10, false); });
+      yn(y, val, na); y += h;
+    }
+    function row(cols, widths, bold, minH) {
+      var lh = LH(10), cells = cols.map(function (c, i) { return wrap(c, widths[i] - 4, 10, bold); });
+      var h = Math.max(minH || 8, Math.max.apply(null, cells.map(function (c) { return c.length; })) * lh + 4);
+      need(h); var x = M;
+      cells.forEach(function (ls, i) {
+        doc.setDrawColor(40); doc.setLineWidth(0.3); doc.rect(x, y, widths[i], h);
+        ls.forEach(function (l, j) { txt(l, x + 2, y + 2 + 10 * MM * 1.05 + j * lh, 10, bold); });
+        x += widths[i];
+      });
+      y += h;
+    }
+    function detailRow(q, text) {
+      var ls = wrap(text, W - 34 - 4, 10, false), CH = 38;
+      for (var i = 0; i < Math.max(ls.length, 1); i += CH) {
+        var part = ls.slice(i, i + CH).join('\n');
+        row([i === 0 ? q : '', part], [34, W - 34], false, 12);
+      }
+    }
+
+    /* Page 1: declaration */
+    pageHead(); y = 24;
+    para('CONFIDENTIAL EMPLOYMENT HEALTH ASSESSMENT FORM', { size: 14, bold: true, align: 'center', x: M + W / 2, gap: 2 });
+    para('Working Health Solutions is an independent organisation that provides Occupational Health Services for the University of Chichester', { size: 9.5, bold: true, align: 'center', x: M + W / 2, gap: 8 });
+    h2('DECLARATION');
+    para('I declare that the following statements and information are true, to the best of my knowledge and belief. I realise any false or incomplete statement could result in my offer of employment being withdrawn, or my dismissal where information is not discovered by the University prior to the commencement of my employment and which affects my ability to undertake the duties of the post.', { size: 10, gap: 4 });
+    para('I give consent to be medically examined, if required by the Occupational Health Physician. I understand that no medical details will be divulged to any person outside the Occupational Health Service without my written permission, but I consent to an opinion about my fitness to work being given to the University\'s Human Resources Department and my line manager.', { size: 10, gap: 6 });
+    kv('Full name', S.fullName); kv('Post title', S.postTitle);
+    var sp = signaturePng();
+    need(34); txt('Signed', M, y + 3.7, 9, true, 70);
+    if (sp) { var sc = Math.min(80 / sp.w, 24 / sp.h); doc.addImage(sp.url, 'PNG', M + 46, y + 1, sp.w * sc, sp.h * sc); }
+    y += 28; doc.setDrawColor(200); doc.setLineWidth(0.2); doc.line(M, y - 0.6, M + W, y - 0.6);
+    kv('Dated', fmtDate(S.signDate));
+
+    /* Section 1 */
+    newPage();
+    para('Occupational Health - Health Assessment', { size: 14, bold: true, align: 'center', x: M + W / 2, gap: 4 });
+    h2('SECTION 1 - Personal and Employment Details');
+    kv('Status', titleText()); kv('Last name', S.last); kv('First name(s)', S.first);
+    kv('Date of birth', fmtDate(S.dob));
+    kv('Address', [S.addr1, S.addr2, S.town].filter(function (x) { return x && x.trim(); }).join('\n'));
+    kv('Postcode', S.postcode); kv('Telephone no.', S.phone);
+    kv('Phone for weekday calls (9am to 4.30pm, Mon-Fri)', S.phoneSame ? S.phone + ' (same as above)' : S.phone2, 46);
+    y += 3;
+    para('Name and address of General Practitioner / Family Doctor:', { bold: true, gap: 1.5 });
+    para(S.gp || '-', { gap: 5 });
+    para('Employment history - last two occupations:', { bold: true, gap: 2 });
+    var cw = [58, 48, 28, 44];
+    row(['Organisation name', 'Job title', 'Hours per week', 'Dates from - to'], cw, true, 9);
+    row([S.e1org || '', S.e1job || '', S.e1hrs || '', S.e1dates || ''], cw, false, 10);
+    row([S.e2org || '', S.e2job || '', S.e2hrs || '', S.e2dates || ''], cw, false, 10);
+
+    /* Section 2 */
+    newPage();
+    h2('SECTION 2 - Safety to Work');
+    para('Please answer ALL of the following questions (tick box)', { bold: true, gap: 4 });
+    SAFETY.forEach(function (it, i) { qrow((i + 1) + '.', it.q, S['q' + (i + 1)], !!it.na); });
+    y += 3;
+    var anyYes = SAFETY.some(function (it, i) { return S['q' + (i + 1)] === 'yes'; });
+    para('Details of any questions answered YES:', { bold: true, gap: 2 });
+    if (anyYes) {
+      row(['Question number', 'Details'], [34, W - 34], true, 9);
+      SAFETY.forEach(function (it, i) { if (S['q' + (i + 1)] === 'yes') detailRow(String(i + 1), S['q' + (i + 1) + 'd'] || ''); });
+    } else {
+      para('No questions were answered Yes.', { gap: 2 });
+    }
+
+    /* Section 3 */
+    newPage();
+    h2('SECTION 3 - Night Work');
+    if (S.nightRole !== 'yes') {
+      para('Not completed. The applicant has said this role does not involve night work.', { gap: 4 });
+    } else {
+      para('Night work is defined by the government as regularly working for at least three hours during night time, including the time between 11pm and 6am.', { size: 9.5, gap: 5 });
+      qrow('1.', 'Have you ever worked at night before?', S.n1, false);
+      if (S.n1 === 'yes') {
+        para('2.  If "YES" - during this time did you ever suffer:', { gap: 1 });
+        NIGHT_SYMPTOMS.forEach(function (s) { qrow('', s[1], S['n2' + s[0]], false, 6); });
+      } else {
+        para('2.  If "YES" - during this time did you ever suffer:   Not applicable (has not worked nights).', { gap: 3 });
+      }
+      qrow('3.', 'Do you experience visual difficulties driving or working in poorly lit areas or at night time?', S.n3, false);
+      qrow('4.', 'Do you take any medication at a specific time?', S.n4, false);
+      if (S.n4 === 'yes') kv('Medication, dose, purpose and time taken', S.n4d, 62);
+      qrow('5.', 'Do you have any concerns about working during the night as defined above?', S.n5, false);
+      if (S.n5 === 'yes' && has('n5d')) kv('Concerns', S.n5d, 46);
+    }
+
+    /* Footer on every page */
+    var n = doc.getNumberOfPages();
+    for (var p = 1; p <= n; p++) {
+      doc.setPage(p);
+      txt('Page ' + p + ' of ' + n, M + W, 290, 8.5, false, 110, { align: 'right' });
+      if (p === 1) txt('Completed on a phone using a digital copy of the Employment Health Assessment Form (2026).', M, 290, 8, false, 110);
+    }
+    return doc.output('blob');
+  }
+
+  /* ---------- Saving ---------- */
+  var dlNs = null;
+  try { if (window.claude && window.claude.use) window.claude.use('downloads').then(function (n) { dlNs = n; }).catch(function () {}); } catch (e) {}
+
+  function setSaveMsg(text, kind) {
+    var m = $('#save-msg');
+    if (!text) { m.hidden = true; m.textContent = ''; return; }
+    m.className = 'status ' + (kind || 'info'); m.textContent = text; m.hidden = false;
+  }
+  function saved() {
+    setSaveMsg('Saved. Your completed form is a PDF on this phone.', 'ok');
+    $('#after-save').hidden = false; $('#next').textContent = 'Save PDF again';
+    $('#after-save').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+  async function savePdf() {
+    var bad = firstBadStep();
+    if (bad) { go(bad.step); applyErrors(bad.errs); return; }
+    var btn = $('#next'); btn.disabled = true; setSaveMsg('Making your PDF…', 'info');
+    var blob;
+    try {
+      if (!window.jspdf) throw new Error('The PDF maker did not load. Check your connection and reload this page.');
+      blob = buildPdf();
+    } catch (e) { setSaveMsg('Sorry, the PDF could not be made. ' + (e && e.message ? e.message : ''), 'bad'); btn.disabled = false; return; }
+    var filename = 'health-assessment-form-completed.pdf';
+    try {
+      if (dlNs) {
+        try { await dlNs.save({ filename: filename, data: blob }); saved(); btn.disabled = false; return; }
+        catch (e) {
+          if (e && e.code === 'declined') { setSaveMsg('Not saved. Tap the button again when you are ready.', 'info'); btn.disabled = false; return; }
+        }
+      }
+      var file = new File([blob], filename, { type: 'application/pdf' });
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        try { await navigator.share({ files: [file], title: 'Health assessment form' }); saved(); }
+        catch (e) { if (e && e.name === 'AbortError') setSaveMsg('Not saved. Tap the button again when you are ready.', 'info'); else throw e; }
+        btn.disabled = false; return;
+      }
+      var url = URL.createObjectURL(blob), a = document.createElement('a');
+      a.href = url; a.download = filename; document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function () { URL.revokeObjectURL(url); }, 20000);
+      saved();
+    } catch (e) {
+      setSaveMsg('Your phone would not save the file from here. Try opening this page in your phone’s browser, then tap Save as PDF again.', 'bad');
+    }
+    btn.disabled = false;
+  }
+
+  /* ---------- Clearing ---------- */
+  function clearAll() {
+    try { localStorage.removeItem(KEY); } catch (e) {}
+    S = { step: 0, phoneSame: true };
+    $$('[data-k]').forEach(function (el) { if (el.type === 'checkbox') el.checked = el.dataset.k === 'phoneSame'; else el.value = ''; });
+    refreshChoices(); refreshConditionals(); redraw();
+    $('#clear-sure').hidden = true; $('#clear-ask').hidden = false;
+    go(0); $('#clear-start').hidden = true;
+  }
+
+  /* ---------- Init ---------- */
+  function init() {
+    load();
+    buildSafety(); buildNight(); buildSimpleChoices();
+    $('#f-dob').max = todayISO();
+    bindInputs(); bindSignature();
+    refreshChoices(); refreshConditionals();
+    var started = Object.keys(S).some(function (k) { return k !== 'step' && k !== 'phoneSame' && S[k] && (typeof S[k] !== 'object' || S[k].length); });
+    $('#clear-start').hidden = !started;
+    $('#clear-start').addEventListener('click', clearAll);
+    $('#clear-ask').addEventListener('click', function () { $('#clear-sure').hidden = false; $('#clear-ask').hidden = true; });
+    $('#clear-no').addEventListener('click', function () { $('#clear-sure').hidden = true; $('#clear-ask').hidden = false; });
+    $('#clear-yes').addEventListener('click', clearAll);
+    $('#copy-email').addEventListener('click', function () {
+      var b = $('#copy-email'), t = $('#oh-email').textContent;
+      function done(ok) { b.textContent = ok ? 'Copied' : 'Press and hold the address to copy'; setTimeout(function () { b.textContent = 'Copy address'; }, 2500); }
+      try { navigator.clipboard.writeText(t).then(function () { done(true); }, function () { done(false); }); } catch (e) { done(false); }
+    });
+    $('#back').addEventListener('click', function () { go(S.step - 1); });
+    $('#next').addEventListener('click', function () {
+      if (S.step === 6) { savePdf(); return; }
+      var errs = validate(S.step);
+      if (errs.length) { applyErrors(errs); return; }
+      go(S.step + 1);
+    });
+    go(S.step);
+  }
+  init();
+})();
+</script>
+
+</body></html>
