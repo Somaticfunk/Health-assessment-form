@@ -1,0 +1,565 @@
+<!doctype html>
+<html lang="en-GB"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Sign Your Offer Letter</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&display=swap">
+<style>
+:root { color-scheme: light; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+body { margin: 0; }
+[hidden] { display: none !important; }
+img { max-width: 100%; }
+
+/* Layout: one topic per screen, sticky progress on top, one big action button at the bottom. */
+:root {
+  --bg: #F2F5F6;
+  --surface: #FFFFFF;
+  --ink: #13222B;
+  --muted: #53646E;
+  --line: #CFD9DE;
+  --accent: #0A6C74;
+  --accent-ink: #FFFFFF;
+  --accent-soft: #DCEFF0;
+  --danger: #B0261C;
+  --danger-soft: #FBE7E4;
+  --ok: #1B6B3A;
+  --ok-soft: #E1F1E7;
+  --font-display: 'Bricolage Grotesque', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-body: 'Atkinson Hyperlegible', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0E161B; --surface: #16222A; --ink: #E6EDF0; --muted: #9CACB5; --line: #2C3C46;
+    --accent: #5CC4CB; --accent-ink: #06262A; --accent-soft: #14343A;
+    --danger: #FF8F85; --danger-soft: #3A1F1D; --ok: #7DD99C; --ok-soft: #173525;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0E161B; --surface: #16222A; --ink: #E6EDF0; --muted: #9CACB5; --line: #2C3C46;
+  --accent: #5CC4CB; --accent-ink: #06262A; --accent-soft: #14343A;
+  --danger: #FF8F85; --danger-soft: #3A1F1D; --ok: #7DD99C; --ok-soft: #173525;
+  color-scheme: dark;
+}
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 17px; line-height: 1.5; }
+* { box-sizing: border-box; }
+h1, h2, h3 { font-family: var(--font-display); line-height: 1.15; margin: 0; text-wrap: balance; }
+h1 { font-size: clamp(27px, 7.5vw, 36px); font-weight: 700; }
+h2 { font-size: 24px; font-weight: 700; }
+h3 { font-size: 18px; font-weight: 600; }
+p { margin: 0; }
+a { color: var(--accent); }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); border-bottom: 1px solid var(--line); }
+.top-in { max-width: 640px; margin: 0 auto; padding: 10px 16px 0; }
+.top-row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-size: 14px; color: var(--muted); }
+.tag { letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; font-size: 12.5px; }
+.track { height: 4px; background: var(--line); margin-top: 9px; }
+.fill { height: 100%; width: 0; background: var(--accent); transition: width .25s ease; }
+@media (prefers-reduced-motion: reduce) { .fill { transition: none; } }
+
+.app { max-width: 640px; margin: 0 auto; padding-inline: 16px; padding-block: 24px 130px; }
+.step { display: flex; flex-direction: column; gap: 20px; }
+.lead { color: var(--muted); font-size: 18px; }
+.eyebrow { letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; font-size: 13px; color: var(--accent); }
+.stack { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 440px) { .row2 { grid-template-columns: 1fr; } }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.note { background: var(--accent-soft); border-radius: 10px; padding: 14px 16px; font-size: 16px; }
+.plain-list { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; }
+
+.field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+label, .lbl { font-weight: 700; font-size: 16px; }
+.hint { font-size: 15px; color: var(--muted); }
+input[type=text], input[type=tel], input[type=date], textarea {
+  width: 100%; min-height: 50px; padding: 11px 13px; font: inherit; font-size: 17px;
+  color: var(--ink); background: var(--surface); border: 1.5px solid var(--line); border-radius: 8px;
+  -webkit-appearance: none; appearance: none;
+}
+textarea { min-height: 96px; resize: vertical; }
+input::placeholder, textarea::placeholder { color: var(--muted); opacity: .75; }
+.field.invalid > input, .field.invalid > textarea, .field.invalid .sigwrap, .field.invalid .choice button, .field.invalid .opt { border-color: var(--danger); }
+.err { color: var(--danger); font-size: 15.5px; font-weight: 700; }
+.field.invalid > .lbl, .field.invalid > label { color: var(--danger); }
+.check { display: flex; gap: 12px; align-items: flex-start; font-weight: 400; font-size: 17px; cursor: pointer; }
+.check input { width: 26px; height: 26px; margin: 2px 0 0; flex: 0 0 auto; accent-color: var(--accent); }
+.mono { font-variant-numeric: tabular-nums; letter-spacing: 0.04em; }
+
+.choice { display: flex; gap: 8px; }
+.choice button {
+  flex: 1 1 0; min-width: 0; min-height: 50px; padding: 8px 14px; font: inherit; font-weight: 700; font-size: 17px;
+  color: var(--ink); background: var(--surface); border: 1.5px solid var(--line); border-radius: 8px; cursor: pointer;
+}
+.choice button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.choice.wrap { flex-wrap: wrap; }
+.choice.wrap button { flex: 1 1 auto; padding-inline: 16px; }
+
+.optlist { display: flex; flex-direction: column; gap: 8px; }
+.opt { display: flex; gap: 12px; align-items: flex-start; padding: 12px 14px; border: 1.5px solid var(--line); border-radius: 8px; background: var(--surface); cursor: pointer; font-weight: 400; font-size: 17px; }
+.opt.on { border-color: var(--accent); background: var(--accent-soft); }
+.opt input { width: 24px; height: 24px; margin: 1px 0 0; flex: 0 0 auto; accent-color: var(--accent); }
+.opt .code { flex: 0 0 auto; min-width: 24px; color: var(--muted); font-variant-numeric: tabular-nums; font-weight: 700; font-size: 15px; padding-top: 2px; }
+.opt .txt { min-width: 0; }
+.sub { margin: -2px 0 4px 14px; padding-left: 14px; border-left: 3px solid var(--accent); }
+
+.sigwrap { position: relative; border: 1.5px solid var(--line); border-radius: 8px; background: var(--surface); height: 180px; overflow: hidden; }
+.sigwrap canvas { display: block; width: 100%; height: 180px; touch-action: none; cursor: crosshair; }
+.sig-ph { position: absolute; inset: 0; display: grid; place-items: center; color: var(--muted); pointer-events: none; font-size: 16px; }
+.sig-line { position: absolute; left: 16px; right: 16px; bottom: 38px; border-bottom: 1.5px dashed var(--line); pointer-events: none; }
+.btn-line { align-self: flex-start; min-height: 44px; padding: 8px 16px; font: inherit; font-weight: 700; font-size: 16px; color: var(--ink); background: transparent; border: 1.5px solid var(--line); border-radius: 8px; cursor: pointer; }
+
+.decl { border-left: 4px solid var(--accent); padding: 4px 0 4px 14px; display: flex; flex-direction: column; gap: 12px; font-size: 16.5px; }
+
+.sum-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.sum-head button { min-height: 40px; padding: 4px 14px; font: inherit; font-weight: 700; font-size: 15px; color: var(--accent); background: transparent; border: 1.5px solid var(--line); border-radius: 8px; cursor: pointer; }
+dl.sum { margin: 0; display: flex; flex-direction: column; }
+dl.sum > div { display: grid; grid-template-columns: 112px 1fr; gap: 4px 12px; padding-block: 8px; border-top: 1px solid var(--line); }
+dl.sum > div:first-child { border-top: 0; }
+dl.sum dt { color: var(--muted); font-size: 15px; }
+dl.sum dd { margin: 0; min-width: 0; overflow-wrap: anywhere; white-space: pre-wrap; }
+@media (max-width: 420px) { dl.sum > div { grid-template-columns: 1fr; } }
+.sum-sig { max-height: 70px; max-width: 100%; background: #fff; border: 1px solid var(--line); border-radius: 6px; padding: 4px; }
+
+.status { border-radius: 10px; padding: 14px 16px; font-weight: 700; }
+.status.ok { background: var(--ok-soft); color: var(--ok); }
+.status.bad { background: var(--danger-soft); color: var(--danger); }
+.status.info { background: var(--accent-soft); color: var(--ink); }
+.inline-btn { min-height: 44px; padding: 6px 14px; font: inherit; font-weight: 700; font-size: 16px; color: var(--accent); background: transparent; border: 1.5px solid var(--line); border-radius: 8px; cursor: pointer; }
+.link-btn { background: none; border: 0; padding: 8px 0; font: inherit; color: var(--muted); text-decoration: underline; cursor: pointer; text-align: left; font-size: 16px; }
+
+details { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
+summary { padding: 14px 16px; font-weight: 700; cursor: pointer; }
+details > .body { padding: 0 16px 16px; display: flex; flex-direction: column; gap: 12px; font-size: 16px; }
+
+.bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--bg); border-top: 1px solid var(--line); padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px)); }
+.bar-in { max-width: 640px; margin: 0 auto; display: flex; gap: 10px; }
+.bar button { min-height: 54px; font: inherit; font-weight: 700; font-size: 18px; border-radius: 10px; cursor: pointer; }
+#back { flex: 0 0 auto; padding-inline: 20px; color: var(--ink); background: var(--surface); border: 1.5px solid var(--line); }
+#next { flex: 1 1 auto; color: var(--accent-ink); background: var(--accent); border: 0; }
+#next:disabled { opacity: .6; cursor: default; }
+.pickbtn { display: flex; align-items: center; justify-content: center; min-height: 56px; padding: 10px 18px; font: inherit; font-weight: 700; font-size: 18px; color: var(--accent-ink); background: var(--accent); border-radius: 10px; cursor: pointer; text-align: center; }
+.pickbtn input { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+.pages { display: flex; flex-direction: column; gap: 14px; }
+.pages canvas, .preview canvas { display: block; width: 100%; height: auto; background: #fff; border: 1px solid var(--line); border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,.12); }
+.pgno { font-size: 14px; color: var(--muted); margin: 0 0 4px; }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-in">
+    <div class="top-row"><span class="tag">Private</span><span id="where" aria-live="polite">Start</span></div>
+    <div class="track" role="progressbar" aria-label="Progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="track"><div class="fill" id="fill"></div></div>
+  </div>
+</header>
+
+<main class="app">
+
+  <!-- 0 Pick the letter -->
+  <section class="step" data-step="0">
+    <div class="stack">
+      <p class="eyebrow">Offer letter</p>
+      <h1>Sign your offer letter on your phone</h1>
+      <p class="lead">You choose your own offer letter PDF, read it here, add your start date, and sign with your finger. You get back a signed copy of your actual letter. It takes about 5 minutes.</p>
+    </div>
+    <div class="note">Your letter is never uploaded. It is opened and signed on this phone only, and this page keeps nothing once you close it.</div>
+    <div class="field" data-field="file">
+      <label class="pickbtn" for="f-file">Choose my offer letter (PDF)<input type="file" id="f-file" accept="application/pdf,.pdf"></label>
+      <div id="file-msg" role="status" aria-live="polite" hidden></div>
+      <p class="err" hidden></p>
+    </div>
+    <details>
+      <summary>Where is my letter?</summary>
+      <div class="body">
+        <p><b>In an email:</b> open the email, tap the PDF, then save it to Files (iPhone) or Downloads (Android). Then come back here and choose it.</p>
+        <p><b>Already saved:</b> tap the button above and pick it from Files, Downloads or Drive.</p>
+        <p>It should be the PDF of the letter itself, not a photo of it.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- 1 Read -->
+  <section class="step" data-step="1" hidden>
+    <div class="stack">
+      <p class="eyebrow">Read first</p>
+      <h2>Your letter</h2>
+      <p class="hint">Scroll through every page. Pinch to zoom if you need to. This is the letter you are accepting.</p>
+    </div>
+    <div id="pages" class="pages"></div>
+    <div id="pages-msg" class="status info" hidden>Loading your letter…</div>
+    <div class="field" data-field="read">
+      <label class="check"><input type="checkbox" id="f-read"> <span>I have read the whole letter.</span></label>
+      <p class="err" hidden></p>
+    </div>
+    <p class="hint">Not sure about anything in it? Ask the person helping you before you sign. You can go back at any time.</p>
+  </section>
+
+  <!-- 2 Sign -->
+  <section class="step" data-step="2" hidden>
+    <div class="stack">
+      <p class="eyebrow">Accept and sign</p>
+      <h2>Start date and signature</h2>
+      <p class="hint">This fills in the box at the end of the letter, where it says you accept the position on the terms in the letter.</p>
+    </div>
+    <div class="field" data-field="start">
+      <label for="f-start">The date you can start work</label>
+      <input type="date" id="f-start">
+      <p class="hint">The letter's “I will be able to commence my employment on” line.</p>
+      <p class="err" hidden></p>
+    </div>
+    <div class="field" data-field="sig">
+      <span class="lbl" id="l-sig">Signature</span>
+      <div class="sigwrap" id="sigwrap">
+        <canvas id="sig" aria-labelledby="l-sig" role="img"></canvas>
+        <div class="sig-line"></div>
+        <div class="sig-ph" id="sig-ph">Sign here with your finger</div>
+      </div>
+      <button type="button" class="btn-line" id="sig-clear">Clear signature</button>
+      <p class="err" hidden></p>
+    </div>
+    <div class="field" data-field="signDate">
+      <label for="f-signDate">Date you are signing</label>
+      <input type="date" id="f-signDate">
+      <p class="err" hidden></p>
+    </div>
+    <div class="field" data-field="agree">
+      <label class="check"><input type="checkbox" id="f-agree"> <span>I accept the position on the terms and conditions in this letter and in the Terms and Conditions of Employment for Associate Lecturers that go with it.</span></label>
+      <p class="err" hidden></p>
+    </div>
+  </section>
+
+  <!-- 3 Check and save -->
+  <section class="step" data-step="3" hidden>
+    <div class="stack">
+      <p class="eyebrow">Last step</p>
+      <h2>Check, then save</h2>
+      <p class="hint">This is the page of your letter with your details on it. If it looks wrong, go back and change it.</p>
+    </div>
+    <div class="card preview"><div id="preview-msg" class="status info">Preparing your signed letter…</div><canvas id="preview" hidden></canvas></div>
+    <div class="card">
+      <dl class="sum" id="summary"></dl>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button type="button" class="inline-btn" id="chg">Change my start date or signature</button>
+      </div>
+    </div>
+    <div id="save-msg" role="status" aria-live="polite" hidden></div>
+    <div id="after-save" class="stack" hidden>
+      <div class="card">
+        <h3>Now send it on</h3>
+        <p>Open the saved PDF from your Files or Downloads, or use the share sheet that just appeared, and send it to the person who is helping you.</p>
+        <p class="hint">The letter shows your pay, so send it by email or another private route and delete it from your phone afterwards.</p>
+        <button type="button" class="inline-btn" id="restart" style="align-self:flex-start">Clear this page and start again</button>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<nav class="bar" aria-label="Navigation">
+  <div class="bar-in">
+    <button type="button" id="back" hidden>Back</button>
+    <button type="button" id="next">Next</button>
+  </div>
+</nav>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+(function () {
+  'use strict';
+  var STEPS = [
+    { label: 'Start', next: 'Next' },
+    { label: 'Read', next: 'Next' },
+    { label: 'Sign', next: 'Check it' },
+    { label: 'Save', next: 'Save signed letter' }
+  ];
+  var WORKER = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  function $(s) { return document.querySelector(s); }
+  function $$(s) { return Array.prototype.slice.call(document.querySelectorAll(s)); }
+
+  /* Everything lives in memory only. Nothing is stored or sent. */
+  var S = { step: 0, bytes: null, pdf: null, loc: null, pagesDone: false, read: false, start: '', signDate: '', agree: false, sig: [], out: null };
+  var step3Token = 0;
+
+  function todayISO() { var d = new Date(); return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2); }
+  function parts(iso) { var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || ''); return m ? [+m[1], +m[2], +m[3]] : null; }
+  function fmtLong(iso) { var p = parts(iso); return p ? p[2] + ' ' + MONTHS[p[1] - 1] + ' ' + p[0] : ''; }
+  function fmtShort(iso) { var p = parts(iso); return p ? ('0' + p[2]).slice(-2) + '/' + ('0' + p[1]).slice(-2) + '/' + p[0] : ''; }
+  function validDate(iso) { var p = parts(iso); if (!p) return false; var d = new Date(p[0], p[1] - 1, p[2]); return d.getFullYear() === p[0] && d.getMonth() === p[1] - 1 && d.getDate() === p[2] && p[0] > 2000 && p[0] < 2100; }
+
+  /* ---------- Errors ---------- */
+  function fieldOf(k) { return document.querySelector('[data-field="' + k + '"]'); }
+  function showErr(k, msg) { var f = fieldOf(k); if (!f) return; f.classList.add('invalid'); var e = f.querySelector('.err'); if (e) { e.textContent = msg; e.hidden = false; } }
+  function clearErr(k) { var f = fieldOf(k); if (!f) return; f.classList.remove('invalid'); var e = f.querySelector('.err'); if (e) { e.hidden = true; e.textContent = ''; } }
+  function clearAllErr() { $$('.field').forEach(function (f) { f.classList.remove('invalid'); var e = f.querySelector('.err'); if (e) { e.hidden = true; } }); }
+  function applyErrs(errs) {
+    errs.forEach(function (e) { showErr(e[0], e[1]); });
+    var f = errs.length && fieldOf(errs[0][0]); if (f) f.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+  function validate(n) {
+    var e = [];
+    if (n === 0 && !S.loc) e.push(['file', 'Choose your offer letter PDF first.']);
+    if (n === 1 && !S.read) e.push(['read', 'Tick the box once you have read the letter.']);
+    if (n === 2) {
+      if (!validDate(S.start)) e.push(['start', 'Choose the date you can start work.']);
+      if (!S.sig.length) e.push(['sig', 'Sign in the box with your finger.']);
+      if (!validDate(S.signDate)) e.push(['signDate', 'Choose today’s date.']);
+      else if (S.signDate > todayISO()) e.push(['signDate', 'The signing date can’t be in the future.']);
+      if (!S.agree) e.push(['agree', 'Tick the box to accept.']);
+    }
+    return e;
+  }
+
+  /* ---------- Navigation ---------- */
+  function go(n) {
+    S.step = Math.max(0, Math.min(STEPS.length - 1, n));
+    $$('.step').forEach(function (s) { s.hidden = Number(s.dataset.step) !== S.step; });
+    $('#where').textContent = S.step === 0 ? 'Start' : STEPS[S.step].label + ' · ' + (S.step + 1) + ' of ' + STEPS.length;
+    var pct = Math.round(S.step / (STEPS.length - 1) * 100);
+    $('#fill').style.width = pct + '%'; $('#track').setAttribute('aria-valuenow', String(pct));
+    $('#back').hidden = S.step === 0;
+    $('#next').textContent = STEPS[S.step].next; $('#next').disabled = false;
+    clearAllErr();
+    if (S.step === 1) renderPages();
+    if (S.step === 2) {
+      if (!S.signDate) { S.signDate = todayISO(); $('#f-signDate').value = S.signDate; }
+      setTimeout(sizeCanvas, 0);
+    }
+    if (S.step === 3) { setSaveMsg(null); $('#after-save').hidden = true; buildPreview(); }
+    window.scrollTo(0, 0);
+  }
+
+  /* ---------- Loading the letter ---------- */
+  function setFileMsg(text, kind) {
+    var m = $('#file-msg');
+    if (!text) { m.hidden = true; return; }
+    m.className = 'status ' + kind; m.textContent = text; m.hidden = false;
+  }
+  async function locate(pdf) {
+    for (var p = 1; p <= pdf.numPages; p++) {
+      var pg = await pdf.getPage(p);
+      var tc = await pg.getTextContent();
+      var com = null, sig = null, dat = null;
+      tc.items.forEach(function (it) {
+        var t = (it.str || '').trim();
+        if (t.indexOf('I will be able to commence') === 0) com = it;
+        else if (t === 'Signed:') sig = it;
+        else if (t === 'Date:') dat = it;
+      });
+      if (com && sig && dat && Math.abs(sig.transform[5] - dat.transform[5]) < 4) {
+        return { page: p - 1,
+          comX: com.transform[4] + com.width, comY: com.transform[5],
+          sigX: sig.transform[4], sigY: sig.transform[5],
+          datX: dat.transform[4] + dat.width, datY: dat.transform[5] };
+      }
+    }
+    return null;
+  }
+  async function onFile(file) {
+    S.bytes = null; S.pdf = null; S.loc = null; S.pagesDone = false; S.read = false; $('#f-read').checked = false; $('#pages').innerHTML = '';
+    clearErr('file');
+    if (!file) { setFileMsg(null); return; }
+    setFileMsg('Opening your letter…', 'info');
+    try {
+      if (file.size > 25 * 1024 * 1024) throw new Error('That file is very large. Is it the offer letter PDF?');
+      var buf = await file.arrayBuffer();
+      var bytes = new Uint8Array(buf);
+      if (String.fromCharCode.apply(null, bytes.subarray(0, 5)) !== '%PDF-') throw new Error('That does not look like a PDF. Choose the PDF of your offer letter.');
+      await PDFLib.PDFDocument.load(bytes.slice());           /* fails clearly if locked */
+      var pdf = await pdfjsLib.getDocument({ data: bytes.slice() }).promise;
+      var loc = await locate(pdf);
+      if (!loc) throw new Error('I could not find the “I will be able to commence my employment on / Signed / Date” box in this file. Check it is the offer letter PDF. If it is, ask the person helping you.');
+      S.bytes = bytes; S.pdf = pdf; S.loc = loc;
+      setFileMsg('Your letter is ready: ' + pdf.numPages + ' pages. The signing box is on page ' + (loc.page + 1) + '.', 'ok');
+    } catch (e) {
+      var msg = e && e.message ? e.message : 'Something went wrong opening that file.';
+      if (/encrypt/i.test(msg)) msg = 'That PDF is locked, so it cannot be signed here. Ask the person helping you.';
+      setFileMsg(msg, 'bad');
+    }
+  }
+
+  /* ---------- Show pages ---------- */
+  async function drawPage(pdf, num, canvas, widthPx) {
+    var pg = await pdf.getPage(num);
+    var v1 = pg.getViewport({ scale: 1 });
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var sc = (widthPx * dpr) / v1.width, vp = pg.getViewport({ scale: sc });
+    canvas.width = Math.round(vp.width); canvas.height = Math.round(vp.height);
+    await pg.render({ canvasContext: canvas.getContext('2d'), viewport: vp }).promise;
+  }
+  async function renderPages() {
+    if (!S.pdf || S.pagesDone) return;
+    var box = $('#pages'), msg = $('#pages-msg'); box.innerHTML = ''; msg.hidden = false;
+    var pdf = S.pdf, w = Math.max(280, box.clientWidth || 340);
+    try {
+      for (var p = 1; p <= pdf.numPages; p++) {
+        if (S.pdf !== pdf) return;
+        var wrap = document.createElement('div'), no = document.createElement('p'), cv = document.createElement('canvas');
+        no.className = 'pgno'; no.textContent = 'Page ' + p + ' of ' + pdf.numPages;
+        wrap.appendChild(no); wrap.appendChild(cv); box.appendChild(wrap);
+        await drawPage(pdf, p, cv, w);
+      }
+      S.pagesDone = true; msg.hidden = true;
+    } catch (e) { msg.className = 'status bad'; msg.textContent = 'Sorry, the pages would not show. Go back and choose the letter again.'; }
+  }
+
+  /* ---------- Signature pad ---------- */
+  var SIG_H = 180, cv, ctx, drawing = false, cur = null;
+  function inkColour() { return getComputedStyle(document.documentElement).getPropertyValue('--ink').trim() || '#000'; }
+  function sizeCanvas() {
+    var w = $('#sigwrap').clientWidth; if (!w) return;
+    var dpr = window.devicePixelRatio || 1;
+    cv.width = Math.round(w * dpr); cv.height = Math.round(SIG_H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); redraw();
+  }
+  function redraw() {
+    if (!ctx) return;
+    ctx.clearRect(0, 0, cv.width, cv.height);
+    ctx.lineWidth = 2.6; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.strokeStyle = inkColour(); ctx.fillStyle = inkColour();
+    S.sig.forEach(function (st) {
+      if (st.length === 1) { ctx.beginPath(); ctx.arc(st[0][0] * SIG_H, st[0][1] * SIG_H, 1.4, 0, 6.3); ctx.fill(); return; }
+      ctx.beginPath();
+      st.forEach(function (p, i) { if (i) ctx.lineTo(p[0] * SIG_H, p[1] * SIG_H); else ctx.moveTo(p[0] * SIG_H, p[1] * SIG_H); });
+      ctx.stroke();
+    });
+    $('#sig-ph').hidden = !!S.sig.length;
+  }
+  function pt(ev) { var r = cv.getBoundingClientRect(); return [Math.round((ev.clientX - r.left) / SIG_H * 1000) / 1000, Math.round((ev.clientY - r.top) / SIG_H * 1000) / 1000]; }
+  function bindSignature() {
+    cv = $('#sig'); ctx = cv.getContext('2d');
+    cv.addEventListener('pointerdown', function (ev) {
+      ev.preventDefault(); try { cv.setPointerCapture(ev.pointerId); } catch (e) {}
+      drawing = true; cur = [pt(ev)]; S.sig.push(cur); clearErr('sig'); redraw();
+    });
+    cv.addEventListener('pointermove', function (ev) {
+      if (!drawing) return; ev.preventDefault();
+      var p = pt(ev), last = cur[cur.length - 1];
+      if (Math.abs(p[0] - last[0]) + Math.abs(p[1] - last[1]) < 0.004) return;
+      cur.push(p); var n = cur.length;
+      ctx.lineWidth = 2.6; ctx.lineCap = 'round'; ctx.strokeStyle = inkColour();
+      ctx.beginPath(); ctx.moveTo(cur[n - 2][0] * SIG_H, cur[n - 2][1] * SIG_H); ctx.lineTo(p[0] * SIG_H, p[1] * SIG_H); ctx.stroke();
+    });
+    function end() { if (!drawing) return; drawing = false; cur = null; redraw(); }
+    cv.addEventListener('pointerup', end); cv.addEventListener('pointercancel', end);
+    cv.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+    $('#sig-clear').addEventListener('click', function () { S.sig = []; redraw(); });
+    window.addEventListener('resize', function () { if (S.step === 2) sizeCanvas(); });
+    try { window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', redraw); } catch (e) {}
+  }
+  function signaturePng() {
+    var st = S.sig; if (!st.length) return null;
+    var x0 = 9e9, y0 = 9e9, x1 = -9e9, y1 = -9e9;
+    st.forEach(function (s) { s.forEach(function (p) { x0 = Math.min(x0, p[0]); x1 = Math.max(x1, p[0]); y0 = Math.min(y0, p[1]); y1 = Math.max(y1, p[1]); }); });
+    var pad = 0.08; x0 -= pad; y0 -= pad; x1 += pad; y1 += pad;
+    var sc = 320, w = Math.max(60, Math.round((x1 - x0) * sc)), h = Math.max(30, Math.round((y1 - y0) * sc));
+    var c = document.createElement('canvas'); c.width = w; c.height = h;
+    var g = c.getContext('2d'); g.lineWidth = 5; g.lineCap = 'round'; g.lineJoin = 'round'; g.strokeStyle = '#000'; g.fillStyle = '#000';
+    st.forEach(function (s) {
+      if (s.length === 1) { g.beginPath(); g.arc((s[0][0] - x0) * sc, (s[0][1] - y0) * sc, 2.5, 0, 6.3); g.fill(); return; }
+      g.beginPath();
+      s.forEach(function (p, i) { var X = (p[0] - x0) * sc, Y = (p[1] - y0) * sc; if (i) g.lineTo(X, Y); else g.moveTo(X, Y); });
+      g.stroke();
+    });
+    return { url: c.toDataURL('image/png'), w: w, h: h };
+  }
+
+  /* ---------- Stamp the real letter ---------- */
+  async function stamp() {
+    var L = S.loc, doc = await PDFLib.PDFDocument.load(S.bytes.slice());
+    var page = doc.getPages()[L.page];
+    var font = await doc.embedFont(PDFLib.StandardFonts.Helvetica);
+    var ink = PDFLib.rgb(0, 0, 0.1);
+    page.drawText(fmtLong(S.start), { x: L.comX + 6, y: L.comY, size: 11, font: font, color: ink });
+    page.drawText(fmtShort(S.signDate), { x: L.datX + 6, y: L.datY, size: 11, font: font, color: ink });
+    var sg = signaturePng();
+    var img = await doc.embedPng(sg.url);
+    var maxW = 190, maxH = 42, k = Math.min(maxW / sg.w, maxH / sg.h);
+    var w = sg.w * k, h = sg.h * k;
+    page.drawImage(img, { x: L.sigX + 46, y: L.sigY - 24, width: w, height: h });
+    return await doc.save();
+  }
+  async function buildPreview() {
+    var token = ++step3Token, msg = $('#preview-msg'), cvp = $('#preview');
+    msg.hidden = false; msg.className = 'status info'; msg.textContent = 'Preparing your signed letter…'; cvp.hidden = true; S.out = null;
+    var dl = $('#summary'); dl.innerHTML = '';
+    [['Start date', fmtLong(S.start)], ['Signed on', fmtLong(S.signDate)], ['Letter', S.pdf ? S.pdf.numPages + ' pages, signed on page ' + (S.loc.page + 1) : '']].forEach(function (r) {
+      var d = document.createElement('div'), dt = document.createElement('dt'), dd = document.createElement('dd');
+      dt.textContent = r[0]; dd.textContent = r[1]; d.appendChild(dt); d.appendChild(dd); dl.appendChild(d);
+    });
+    try {
+      var out = await stamp();
+      var pdf = await pdfjsLib.getDocument({ data: out.slice() }).promise;
+      if (token !== step3Token) return;
+      await drawPage(pdf, S.loc.page + 1, cvp, Math.max(280, $('.preview').clientWidth - 34));
+      if (token !== step3Token) return;
+      S.out = out; msg.hidden = true; cvp.hidden = false;
+    } catch (e) { msg.className = 'status bad'; msg.textContent = 'Sorry, the signed letter could not be made. ' + (e && e.message ? e.message : ''); }
+  }
+
+  /* ---------- Saving ---------- */
+  var dlNs = null;
+  try { if (window.claude && window.claude.use) window.claude.use('downloads').then(function (n) { dlNs = n; }).catch(function () {}); } catch (e) {}
+  function setSaveMsg(text, kind) {
+    var m = $('#save-msg');
+    if (!text) { m.hidden = true; m.textContent = ''; return; }
+    m.className = 'status ' + (kind || 'info'); m.textContent = text; m.hidden = false;
+  }
+  function saved() {
+    setSaveMsg('Saved. Your signed letter is a PDF on this phone.', 'ok');
+    $('#after-save').hidden = false; $('#next').textContent = 'Save again';
+    $('#after-save').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+  async function savePdf() {
+    var btn = $('#next');
+    if (!S.out) { setSaveMsg('Still preparing your letter. Wait a moment, then tap again.', 'info'); return; }
+    btn.disabled = true;
+    var blob = new Blob([S.out], { type: 'application/pdf' }), filename = 'offer-letter-signed.pdf';
+    try {
+      if (dlNs) {
+        try { await dlNs.save({ filename: filename, data: blob }); saved(); btn.disabled = false; return; }
+        catch (e) { if (e && e.code === 'declined') { setSaveMsg('Not saved. Tap the button again when you are ready.', 'info'); btn.disabled = false; return; } }
+      }
+      var file = new File([blob], filename, { type: 'application/pdf' });
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        try { await navigator.share({ files: [file], title: 'Signed offer letter' }); saved(); }
+        catch (e) { if (e && e.name === 'AbortError') setSaveMsg('Not saved. Tap the button again when you are ready.', 'info'); else throw e; }
+        btn.disabled = false; return;
+      }
+      var url = URL.createObjectURL(blob), a = document.createElement('a');
+      a.href = url; a.download = filename; document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function () { URL.revokeObjectURL(url); }, 20000);
+      saved();
+    } catch (e) { setSaveMsg('Your phone would not save the file from here. Try opening this page in your phone’s browser, then tap again.', 'bad'); }
+    btn.disabled = false;
+  }
+
+  /* ---------- Init ---------- */
+  function init() {
+    try { pdfjsLib.GlobalWorkerOptions.workerSrc = WORKER; } catch (e) {}
+    $('#f-signDate').max = todayISO();
+    bindSignature();
+    $('#f-file').addEventListener('change', function (e) { onFile(e.target.files && e.target.files[0]); });
+    $('#f-read').addEventListener('change', function (e) { S.read = e.target.checked; clearErr('read'); });
+    $('#f-start').addEventListener('input', function (e) { S.start = e.target.value; clearErr('start'); });
+    $('#f-signDate').addEventListener('input', function (e) { S.signDate = e.target.value; clearErr('signDate'); });
+    $('#f-agree').addEventListener('change', function (e) { S.agree = e.target.checked; clearErr('agree'); });
+    $('#back').addEventListener('click', function () { go(S.step - 1); });
+    $('#chg').addEventListener('click', function () { go(2); });
+    $('#restart').addEventListener('click', function () { location.reload(); });
+    $('#next').addEventListener('click', function () {
+      if (S.step === 3) { savePdf(); return; }
+      var errs = validate(S.step);
+      if (errs.length) { applyErrs(errs); return; }
+      go(S.step + 1);
+    });
+    go(0);
+  }
+  init();
+})();
+</script>
+</body></html>
