@@ -1,0 +1,1015 @@
+<!doctype html>
+<html lang="en-GB"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>HR Details Form</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&display=swap">
+<style>
+:root { color-scheme: light; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+body { margin: 0; }
+[hidden] { display: none !important; }
+img { max-width: 100%; }
+
+/* Layout: one topic per screen, sticky progress on top, one big action button at the bottom. */
+:root {
+  --bg: #F2F5F6;
+  --surface: #FFFFFF;
+  --ink: #13222B;
+  --muted: #53646E;
+  --line: #CFD9DE;
+  --accent: #0A6C74;
+  --accent-ink: #FFFFFF;
+  --accent-soft: #DCEFF0;
+  --danger: #B0261C;
+  --danger-soft: #FBE7E4;
+  --ok: #1B6B3A;
+  --ok-soft: #E1F1E7;
+  --font-display: 'Bricolage Grotesque', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-body: 'Atkinson Hyperlegible', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0E161B; --surface: #16222A; --ink: #E6EDF0; --muted: #9CACB5; --line: #2C3C46;
+    --accent: #5CC4CB; --accent-ink: #06262A; --accent-soft: #14343A;
+    --danger: #FF8F85; --danger-soft: #3A1F1D; --ok: #7DD99C; --ok-soft: #173525;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0E161B; --surface: #16222A; --ink: #E6EDF0; --muted: #9CACB5; --line: #2C3C46;
+  --accent: #5CC4CB; --accent-ink: #06262A; --accent-soft: #14343A;
+  --danger: #FF8F85; --danger-soft: #3A1F1D; --ok: #7DD99C; --ok-soft: #173525;
+  color-scheme: dark;
+}
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 17px; line-height: 1.5; }
+* { box-sizing: border-box; }
+h1, h2, h3 { font-family: var(--font-display); line-height: 1.15; margin: 0; text-wrap: balance; }
+h1 { font-size: clamp(27px, 7.5vw, 36px); font-weight: 700; }
+h2 { font-size: 24px; font-weight: 700; }
+h3 { font-size: 18px; font-weight: 600; }
+p { margin: 0; }
+a { color: var(--accent); }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); border-bottom: 1px solid var(--line); }
+.top-in { max-width: 640px; margin: 0 auto; padding: 10px 16px 0; }
+.top-row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-size: 14px; color: var(--muted); }
+.tag { letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; font-size: 12.5px; }
+.track { height: 4px; background: var(--line); margin-top: 9px; }
+.fill { height: 100%; width: 0; background: var(--accent); transition: width .25s ease; }
+@media (prefers-reduced-motion: reduce) { .fill { transition: none; } }
+
+.app { max-width: 640px; margin: 0 auto; padding-inline: 16px; padding-block: 24px 130px; }
+.step { display: flex; flex-direction: column; gap: 20px; }
+.lead { color: var(--muted); font-size: 18px; }
+.eyebrow { letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; font-size: 13px; color: var(--accent); }
+.stack { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 440px) { .row2 { grid-template-columns: 1fr; } }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.note { background: var(--accent-soft); border-radius: 10px; padding: 14px 16px; font-size: 16px; }
+.plain-list { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; }
+
+.field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+label, .lbl { font-weight: 700; font-size: 16px; }
+.hint { font-size: 15px; color: var(--muted); }
+input[type=text], input[type=tel], input[type=date], textarea {
+  width: 100%; min-height: 50px; padding: 11px 13px; font: inherit; font-size: 17px;
+  color: var(--ink); background: var(--surface); border: 1.5px solid var(--line); border-radius: 8px;
+  -webkit-appearance: none; appearance: none;
+}
+textarea { min-height: 96px; resize: vertical; }
+input::placeholder, textarea::placeholder { color: var(--muted); opacity: .75; }
+.field.invalid > input, .field.invalid > textarea, .field.invalid .sigwrap, .field.invalid .choice button, .field.invalid .opt { border-color: var(--danger); }
+.err { color: var(--danger); font-size: 15.5px; font-weight: 700; }
+.field.invalid > .lbl, .field.invalid > label { color: var(--danger); }
+.check { display: flex; gap: 12px; align-items: flex-start; font-weight: 400; font-size: 17px; cursor: pointer; }
+.check input { width: 26px; height: 26px; margin: 2px 0 0; flex: 0 0 auto; accent-color: var(--accent); }
+.mono { font-variant-numeric: tabular-nums; letter-spacing: 0.04em; }
+
+.choice { display: flex; gap: 8px; }
+.choice button {
+  flex: 1 1 0; min-width: 0; min-height: 50px; padding: 8px 14px; font: inherit; font-weight: 700; font-size: 17px;
+  color: var(--ink); background: var(--surface); border: 1.5px solid var(--line); border-radius: 8px; cursor: pointer;
+}
+.choice button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.choice.wrap { flex-wrap: wrap; }
+.choice.wrap button { flex: 1 1 auto; padding-inline: 16px; }
+
+.optlist { display: flex; flex-direction: column; gap: 8px; }
+.opt { display: flex; gap: 12px; align-items: flex-start; padding: 12px 14px; border: 1.5px solid var(--line); border-radius: 8px; background: var(--surface); cursor: pointer; font-weight: 400; font-size: 17px; }
+.opt.on { border-color: var(--accent); background: var(--accent-soft); }
+.opt input { width: 24px; height: 24px; margin: 1px 0 0; flex: 0 0 auto; accent-color: var(--accent); }
+.opt .code { flex: 0 0 auto; min-width: 24px; color: var(--muted); font-variant-numeric: tabular-nums; font-weight: 700; font-size: 15px; padding-top: 2px; }
+.opt .txt { min-width: 0; }
+.sub { margin: -2px 0 4px 14px; padding-left: 14px; border-left: 3px solid var(--accent); }
+
+.sigwrap { position: relative; border: 1.5px solid var(--line); border-radius: 8px; background: var(--surface); height: 180px; overflow: hidden; }
+.sigwrap canvas { display: block; width: 100%; height: 180px; touch-action: none; cursor: crosshair; }
+.sig-ph { position: absolute; inset: 0; display: grid; place-items: center; color: var(--muted); pointer-events: none; font-size: 16px; }
+.sig-line { position: absolute; left: 16px; right: 16px; bottom: 38px; border-bottom: 1.5px dashed var(--line); pointer-events: none; }
+.btn-line { align-self: flex-start; min-height: 44px; padding: 8px 16px; font: inherit; font-weight: 700; font-size: 16px; color: var(--ink); background: transparent; border: 1.5px solid var(--line); border-radius: 8px; cursor: pointer; }
+
+.decl { border-left: 4px solid var(--accent); padding: 4px 0 4px 14px; display: flex; flex-direction: column; gap: 12px; font-size: 16.5px; }
+
+.sum-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.sum-head button { min-height: 40px; padding: 4px 14px; font: inherit; font-weight: 700; font-size: 15px; color: var(--accent); background: transparent; border: 1.5px solid var(--line); border-radius: 8px; cursor: pointer; }
+dl.sum { margin: 0; display: flex; flex-direction: column; }
+dl.sum > div { display: grid; grid-template-columns: 112px 1fr; gap: 4px 12px; padding-block: 8px; border-top: 1px solid var(--line); }
+dl.sum > div:first-child { border-top: 0; }
+dl.sum dt { color: var(--muted); font-size: 15px; }
+dl.sum dd { margin: 0; min-width: 0; overflow-wrap: anywhere; white-space: pre-wrap; }
+@media (max-width: 420px) { dl.sum > div { grid-template-columns: 1fr; } }
+.sum-sig { max-height: 70px; max-width: 100%; background: #fff; border: 1px solid var(--line); border-radius: 6px; padding: 4px; }
+
+.status { border-radius: 10px; padding: 14px 16px; font-weight: 700; }
+.status.ok { background: var(--ok-soft); color: var(--ok); }
+.status.bad { background: var(--danger-soft); color: var(--danger); }
+.status.info { background: var(--accent-soft); color: var(--ink); }
+.inline-btn { min-height: 44px; padding: 6px 14px; font: inherit; font-weight: 700; font-size: 16px; color: var(--accent); background: transparent; border: 1.5px solid var(--line); border-radius: 8px; cursor: pointer; }
+.link-btn { background: none; border: 0; padding: 8px 0; font: inherit; color: var(--muted); text-decoration: underline; cursor: pointer; text-align: left; font-size: 16px; }
+
+details { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
+summary { padding: 14px 16px; font-weight: 700; cursor: pointer; }
+details > .body { padding: 0 16px 16px; display: flex; flex-direction: column; gap: 12px; font-size: 16px; }
+
+.bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--bg); border-top: 1px solid var(--line); padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px)); }
+.bar-in { max-width: 640px; margin: 0 auto; display: flex; gap: 10px; }
+.bar button { min-height: 54px; font: inherit; font-weight: 700; font-size: 18px; border-radius: 10px; cursor: pointer; }
+#back { flex: 0 0 auto; padding-inline: 20px; color: var(--ink); background: var(--surface); border: 1.5px solid var(--line); }
+#next { flex: 1 1 auto; color: var(--accent-ink); background: var(--accent); border: 0; }
+#next:disabled { opacity: .6; cursor: default; }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-in">
+    <div class="top-row"><span class="tag">Confidential</span><span id="where" aria-live="polite">Start</span></div>
+    <div class="track" role="progressbar" aria-label="Progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="track"><div class="fill" id="fill"></div></div>
+  </div>
+</header>
+
+<main class="app">
+
+  <!-- 0 Welcome -->
+  <section class="step" data-step="0">
+    <div class="stack">
+      <p class="eyebrow">HR database data input form</p>
+      <h1>Fill in your HR details on your phone</h1>
+      <p class="lead">This is a phone-friendly copy of the HR Database Data Input Form. It takes about 5 to 10 minutes. At the end you sign with your finger and save it as a PDF.</p>
+    </div>
+    <div class="card">
+      <h3>Have these to hand</h3>
+      <ul class="plain-list">
+        <li>Your bank or building society details: sort code, account number and the name on the account</li>
+        <li>Your highest qualification, and any teaching qualifications</li>
+        <li>Your ORCID number, if you have one (academic staff only)</li>
+      </ul>
+    </div>
+    <div class="note">Nothing is sent anywhere by this page. Most answers are kept on this phone as you go, so you can close it and come back. Your bank details and your answers about disability and parental leave are never kept, so you'll need to re-enter those if you close the page before saving.</div>
+    <details>
+      <summary>Read the introduction from the form first</summary>
+      <div class="body">
+        <p>By completing this form you are authorising the University to pay your salary directly into your Bank or Building Society account. Personal data collected for the purposes of the Human Resources Database will be processed in accordance with the Data Protection legislation 2002. The information collected will be used only for internal purposes except where an authorised request is made by an external recipient of data as set out in the University's Data Protection Policy which is available on the University's Intranet.</p>
+        <p>All personal data will be stored in such a way that access is only permitted by authorised personnel.</p>
+        <p>By completing and signing the attached data input form you are taken to consent to the processing of your personal data. For further details regarding the processing of personal data, please refer to the University's Data Protection Policy.</p>
+      </div>
+    </details>
+    <button type="button" class="link-btn" id="clear-start" hidden>Clear my saved answers and start again</button>
+  </section>
+
+  <!-- 1 About you -->
+  <section class="step" data-step="1" hidden>
+    <div class="stack">
+      <p class="eyebrow">About you</p>
+      <h2>Your name and date of birth</h2>
+    </div>
+    <div class="field" data-field="fullName">
+      <label for="f-fullName">Employee name</label>
+      <input type="text" id="f-fullName" data-k="fullName" autocomplete="name" autocapitalize="words">
+      <p class="err" hidden></p>
+    </div>
+    <div class="field" data-field="dob">
+      <label for="f-dob">Date of birth</label>
+      <input type="date" id="f-dob" data-k="dob" autocomplete="bday">
+      <p class="err" hidden></p>
+    </div>
+  </section>
+
+  <!-- 2 Bank -->
+  <section class="step" data-step="2" hidden>
+    <div class="stack">
+      <p class="eyebrow">Bank details</p>
+      <h2>Where your salary is paid</h2>
+      <p class="hint">For your privacy, this screen is not kept on your phone if you close the page.</p>
+    </div>
+    <div class="field" data-field="bankName">
+      <label for="f-bankName">Bank or building society name</label>
+      <input type="text" id="f-bankName" data-k="bankName" autocapitalize="words">
+      <p class="err" hidden></p>
+    </div>
+    <div class="row2">
+      <div class="field" data-field="sort">
+        <label for="f-sort">Sort code</label>
+        <input type="text" id="f-sort" data-k="sort" class="mono" inputmode="numeric" autocomplete="off" placeholder="00-00-00" maxlength="8">
+        <p class="err" hidden></p>
+      </div>
+      <div class="field" data-field="acct">
+        <label for="f-acct">Account number</label>
+        <input type="text" id="f-acct" data-k="acct" class="mono" inputmode="numeric" autocomplete="off" placeholder="8 digits" maxlength="10">
+        <p class="err" hidden></p>
+      </div>
+    </div>
+    <div class="field" data-field="acctName">
+      <label for="f-acctName">Name on account</label>
+      <input type="text" id="f-acctName" data-k="acctName" autocomplete="off" autocapitalize="words">
+      <p class="err" hidden></p>
+    </div>
+    <div class="note">Salaries paid directly into a bank or building society account by BACS transfer may be drawn on the day the account is credited with your salary.</div>
+  </section>
+
+  <!-- 3 Disability and leave -->
+  <section class="step" data-step="3" hidden>
+    <div class="stack">
+      <p class="eyebrow">Disability and leave</p>
+      <h2>Two personal questions</h2>
+      <p class="hint">For your privacy, this screen is not kept on your phone if you close the page. Choosing "Prefer not to say" leaves the question blank on the form.</p>
+    </div>
+    <div class="card">
+      <div class="field" data-field="dis">
+        <span class="lbl" id="l-dis">Do you have a disability as defined by the Equality Act 2010?</span>
+        <p class="hint">The Act says: "You're disabled under the Equality Act 2010 if you have a physical or mental impairment that has a 'substantial' and 'long-term' negative effect on your ability to do normal daily activities."</p>
+        <div class="choice wrap" role="group" aria-labelledby="l-dis" data-choice="dis"></div>
+        <p class="err" hidden></p>
+      </div>
+      <div class="field" data-field="disD" data-show="dis=yes" hidden>
+        <label for="f-disD">If appropriate, what help could the University provide? (optional)</label>
+        <textarea id="f-disD" data-k="disD" rows="3"></textarea>
+      </div>
+    </div>
+    <div class="card">
+      <div class="field" data-field="pl">
+        <span class="lbl" id="l-pl">Have you taken a period of Parental Leave during your previous employment?</span>
+        <div class="choice wrap" role="group" aria-labelledby="l-pl" data-choice="pl"></div>
+        <p class="err" hidden></p>
+      </div>
+      <div class="field" data-field="plD" data-show="pl=yes" hidden>
+        <label for="f-plD">Brief details and dates</label>
+        <textarea id="f-plD" data-k="plD" rows="3"></textarea>
+        <p class="err" hidden></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 Most recent employment -->
+  <section class="step" data-step="4" hidden>
+    <div class="stack">
+      <p class="eyebrow">Most recent employment</p>
+      <h2>Where were you before this job?</h2>
+      <p class="hint">Choose one. The small number is the code HR uses.</p>
+    </div>
+    <div class="field" data-field="emp">
+      <div class="optlist" id="list-emp"></div>
+      <p class="err" hidden></p>
+    </div>
+  </section>
+
+  <!-- 5 Qualification -->
+  <section class="step" data-step="5" hidden>
+    <div class="stack">
+      <p class="eyebrow">Qualifications</p>
+      <h2>Your highest qualification</h2>
+      <p class="hint">Choose your highest only. Bring your original certificate to your HR induction.</p>
+    </div>
+    <div class="field" data-field="qual">
+      <div class="optlist" id="list-qual"></div>
+      <p class="err" hidden></p>
+    </div>
+  </section>
+
+  <!-- 6 Teaching -->
+  <section class="step" data-step="6" hidden>
+    <div class="stack">
+      <p class="eyebrow">Academic staff</p>
+      <h2>Teaching qualifications</h2>
+      <p class="hint">This part is for academic staff to complete.</p>
+    </div>
+    <div class="card">
+      <div class="field" data-field="acad">
+        <span class="lbl" id="l-acad">Are you academic staff (for example a lecturer)?</span>
+        <div class="choice" role="group" aria-labelledby="l-acad" data-choice="acad"></div>
+        <p class="err" hidden></p>
+      </div>
+    </div>
+    <div class="stack" data-show="acad=yes" hidden>
+      <div class="stack">
+        <h3>Academic teaching qualification</h3>
+        <p class="hint">Tick all you have and bring your original certificate(s) to your HR induction.</p>
+      </div>
+      <div class="field" data-field="tq">
+        <div class="optlist" id="list-tq"></div>
+        <p class="err" hidden></p>
+      </div>
+      <div class="field" data-field="orcid">
+        <label for="f-orcid">ORCID identifier (if you have one)</label>
+        <input type="text" id="f-orcid" data-k="orcid" class="mono" inputmode="text" autocomplete="off" autocapitalize="characters" placeholder="0000-0000-0000-0000" maxlength="19">
+        <p class="hint">Four groups of four digits. The very last character can be an X.</p>
+        <p class="err" hidden></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 Sign -->
+  <section class="step" data-step="7" hidden>
+    <div class="stack">
+      <p class="eyebrow">Authorisation and consent</p>
+      <h2>Read, then sign</h2>
+      <p class="hint">You sign once. Your signature goes on both places the paper form asks for it.</p>
+    </div>
+    <div class="decl">
+      <p>I hereby authorise the University of Chichester to pay my salary directly into my Bank or Building Society account via BACS transfer.</p>
+      <p>By completing and signing this form I am taken to consent to the processing of my personal data, as described in the introduction to the form and the University's Data Protection Policy.</p>
+    </div>
+    <div class="field" data-field="signName">
+      <label for="f-signName">Your name</label>
+      <input type="text" id="f-signName" data-k="signName" autocomplete="name" autocapitalize="words">
+      <p class="err" hidden></p>
+    </div>
+    <div class="field" data-field="sig">
+      <span class="lbl" id="l-sig">Signature</span>
+      <div class="sigwrap" id="sigwrap">
+        <canvas id="sig" aria-labelledby="l-sig" role="img"></canvas>
+        <div class="sig-line"></div>
+        <div class="sig-ph" id="sig-ph">Sign here with your finger</div>
+      </div>
+      <button type="button" class="btn-line" id="sig-clear">Clear signature</button>
+      <p class="err" hidden></p>
+    </div>
+    <div class="field" data-field="signDate">
+      <label for="f-signDate">Date</label>
+      <input type="date" id="f-signDate" data-k="signDate">
+      <p class="err" hidden></p>
+    </div>
+    <div class="field" data-field="agree">
+      <label class="check"><input type="checkbox" id="f-agree" data-k="agree"> <span>I agree to the authorisation and consent above.</span></label>
+      <p class="err" hidden></p>
+    </div>
+  </section>
+
+  <!-- 8 Check and save -->
+  <section class="step" data-step="8" hidden>
+    <div class="stack">
+      <p class="eyebrow">Last step</p>
+      <h2>Check your answers, then save</h2>
+      <p class="hint">Use Change on any section to go back and edit it.</p>
+    </div>
+    <div class="stack" id="summary"></div>
+    <div id="save-msg" role="status" aria-live="polite" hidden></div>
+    <div id="after-save" class="stack" hidden>
+      <div class="card">
+        <h3>Now send the PDF</h3>
+        <p>Open the saved PDF from your Files or Downloads, or use the share sheet that just appeared, and send it to the person who is helping you.</p>
+        <p class="hint">The PDF contains your bank details, so send it by email or another private route and delete it from your phone afterwards. Then you can clear your answers from this phone.</p>
+        <div class="stack">
+          <button type="button" class="inline-btn" id="clear-ask" style="align-self:flex-start">Clear my answers from this phone</button>
+          <div id="clear-sure" class="stack" hidden>
+            <p><b>This removes everything you've typed, including your signature.</b></p>
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+              <button type="button" class="inline-btn" id="clear-yes" style="color:var(--danger)">Yes, clear everything</button>
+              <button type="button" class="inline-btn" id="clear-no" style="color:var(--ink)">Keep it</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<nav class="bar" aria-label="Form navigation">
+  <div class="bar-in">
+    <button type="button" id="back" hidden>Back</button>
+    <button type="button" id="next">Start</button>
+  </div>
+</nav>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  /* ---------- Content ---------- */
+  var STEPS = [
+    { label: 'Start', next: 'Start' },
+    { label: 'About you', next: 'Next' },
+    { label: 'Bank details', next: 'Next' },
+    { label: 'Disability and leave', next: 'Next' },
+    { label: 'Previous employment', next: 'Next' },
+    { label: 'Qualifications', next: 'Next' },
+    { label: 'Teaching', next: 'Next' },
+    { label: 'Sign', next: 'Check my answers' },
+    { label: 'Check and save', next: 'Save as PDF' }
+  ];
+  var EMP = [
+    ['01', 'Another publicly funded Higher Education Institution in UK'],
+    ['02', 'Publicly funded HEI in an overseas country'],
+    ['03', 'Other education provider in the UK'],
+    ['04', 'Other education provider in an overseas country'],
+    ['07', 'Student in the UK'],
+    ['08', 'Student in an overseas country'],
+    ['09', 'NHS/General medical or general dental practice in the UK'],
+    ['10', 'Health service in an overseas country'],
+    ['11', 'Other public sector in the UK'],
+    ['12', 'Private industry/commerce in the UK'],
+    ['13', 'Self-employed in the UK'],
+    ['14', 'Other employment in the UK'],
+    ['15', 'Other employment in an overseas country'],
+    ['16', 'Working in a research institute (private) in the UK'],
+    ['17', 'Working in a research institute (private) in an overseas country'],
+    ['18', 'Working in a research institute (public) in the UK'],
+    ['19', 'Working in a research institute (public) in an overseas country'],
+    ['21', 'Not in regular employment'],
+    ['22', 'Working in the voluntary sector in the UK'],
+    ['23', 'Working in the voluntary sector in an overseas country']
+  ];
+  var QUAL = [
+    ['01', 'Doctorate'],
+    ['02', 'Other Higher Degree'],
+    ['03', 'PGCE'],
+    ['09', 'Other Postgraduate qualification (including professional)'],
+    ['11', 'First Degree'],
+    ['12', 'First Degree with Qualified Teacher Status (QTS)'],
+    ['19', 'Other qualification at first-degree level (including professional)'],
+    ['21', 'Diploma of HE'],
+    ['22', 'HND/HNC'],
+    ['29', 'Other undergraduate qualification (including professional)'],
+    ['31', '‘A’ level, Scottish Higher or equivalent (NVQ/SVQ Level 3)'],
+    ['32', '‘O’ level/GCSE or equivalent (NVQ/SVQ Level 2)'],
+    ['97', 'Other qualifications'],
+    ['98', 'No qualifications']
+  ];
+  var TQ = [
+    ['06', 'Holder of a National Teaching Fellowship Scheme Individual Award'],
+    ['07', 'Holder of a PGCE in higher education, secondary education, further education, lifelong learning or any other equivalent UK qualification'],
+    ['08', 'Accredited as a teacher of their subject by a professional UK body'],
+    ['09', 'Other UK accreditation or qualification in teaching in the higher education sector'],
+    ['10', 'Overseas accreditation or qualification of any level of teaching'],
+    ['11', 'Recognised by Advance HE as an Associate fellow against Descriptor 1 of the UKPSF'],
+    ['12', 'Recognised by Advance HE as a Fellow against Descriptor 2 of the UKPSF'],
+    ['13', 'Recognised by Advance HE as a Senior Fellow against Descriptor 3 of the UKPSF'],
+    ['14', 'Recognised by Advance HE as a Principal Fellow against Descriptor 4 of the UKPSF'],
+    ['15', 'Recognised by SEDA against Descriptor 1 of the UKPSF'],
+    ['16', 'Recognised by SEDA against Descriptor 2 of the UKPSF'],
+    ['99', 'No academic teaching qualification held']
+  ];
+  var KEY = 'hr-details-form-v1';
+  /* Never written to the phone's storage. */
+  var NOSAVE = { sort: 1, acct: 1, dis: 1, disD: 1, pl: 1, plD: 1 };
+
+  /* ---------- State ---------- */
+  var S = { step: 0 };
+  function load() {
+    try { var r = localStorage.getItem(KEY); if (r) { var o = JSON.parse(r); if (o && typeof o === 'object') S = o; } } catch (e) {}
+    if (typeof S.step !== 'number') S.step = 0;
+  }
+  function persist() {
+    try {
+      var c = {}; Object.keys(S).forEach(function (k) { if (!NOSAVE[k]) c[k] = S[k]; });
+      localStorage.setItem(KEY, JSON.stringify(c));
+    } catch (e) {}
+  }
+  function $(s, r) { return (r || document).querySelector(s); }
+  function $$(s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); }
+  function todayISO() {
+    var d = new Date(), p = function (n) { return (n < 10 ? '0' : '') + n; };
+    return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
+  }
+  function fmtDate(iso) {
+    var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || '');
+    return m ? m[3] + '/' + m[2] + '/' + m[1] : (iso || '');
+  }
+  function has(k) { return typeof S[k] === 'string' && S[k].trim() !== ''; }
+  function label(list, code) { for (var i = 0; i < list.length; i++) if (list[i][0] === code) return list[i][1]; return ''; }
+  function yn(v) { return v === 'yes' ? 'Yes' : v === 'no' ? 'No' : v === 'skip' ? 'Prefer not to say' : ''; }
+
+  /* ---------- Build lists and choices ---------- */
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+  function buildList(id, key, items, multi) {
+    var h = '';
+    items.forEach(function (it) {
+      h += '<label class="opt"><input type="' + (multi ? 'checkbox' : 'radio') + '" name="' + key + '" value="' + it[0] + '">' +
+        '<span class="code">' + it[0] + '</span><span class="txt">' + esc(it[1]) + '</span></label>';
+      if (key === 'emp' && (it[0] === '01' || it[0] === '02')) {
+        h += '<div class="sub field" data-field="hei' + it[0] + '" data-show="emp=' + it[0] + '" hidden>' +
+          '<label for="f-hei' + it[0] + '">Name of previous HEI</label>' +
+          '<input type="text" id="f-hei' + it[0] + '" data-k="hei' + it[0] + '" autocapitalize="words"><p class="err" hidden></p></div>';
+      }
+    });
+    $(id).innerHTML = h;
+  }
+  function buildChoices() {
+    var three = '<button type="button" data-v="yes" aria-pressed="false">Yes</button><button type="button" data-v="no" aria-pressed="false">No</button><button type="button" data-v="skip" aria-pressed="false">Prefer not to say</button>';
+    $('[data-choice="dis"]').innerHTML = three;
+    $('[data-choice="pl"]').innerHTML = three;
+    $('[data-choice="acad"]').innerHTML = '<button type="button" data-v="yes" aria-pressed="false">Yes</button><button type="button" data-v="no" aria-pressed="false">No</button>';
+  }
+
+  /* ---------- Binding ---------- */
+  function refreshChoices() {
+    $$('.choice').forEach(function (g) {
+      var v = S[g.dataset.choice];
+      $$('button', g).forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.v === v)); });
+    });
+  }
+  function refreshOpts() {
+    $$('.opt input').forEach(function (i) {
+      var on = i.type === 'radio' ? S[i.name] === i.value : (S[i.name] || []).indexOf(i.value) > -1;
+      i.checked = on; i.parentElement.classList.toggle('on', on);
+    });
+  }
+  function refreshConditionals() {
+    $$('[data-show]').forEach(function (el) {
+      var p = el.dataset.show.split('=');
+      el.hidden = p[1].split('|').indexOf(String(S[p[0]])) < 0;
+    });
+  }
+  function fieldOf(k) { return $('[data-field="' + k + '"]'); }
+  function clearErr(k) {
+    var f = fieldOf(k); if (!f) return;
+    f.classList.remove('invalid');
+    var e = $('.err', f); if (e) e.hidden = true;
+  }
+  function showErr(k, msg) {
+    var f = fieldOf(k); if (!f) return;
+    f.classList.add('invalid');
+    var e = $('.err', f); if (e) { e.textContent = msg; e.hidden = false; }
+  }
+  function clearAllErr() { $$('.field.invalid').forEach(function (f) { f.classList.remove('invalid'); }); $$('.err').forEach(function (e) { e.hidden = true; }); }
+
+  function digits(s, n) { return String(s).replace(/\D/g, '').slice(0, n); }
+  function fmtSort(s) { var d = digits(s, 6); return d.replace(/^(\d{2})(\d{1,2})?(\d{1,2})?$/, function (m, a, b, c) { return a + (b ? '-' + b : '') + (c ? '-' + c : ''); }); }
+  function fmtOrcid(s) {
+    var t = String(s).toUpperCase().replace(/[^0-9X]/g, '').slice(0, 16), out = '';
+    for (var i = 0; i < t.length; i++) { if (i && i % 4 === 0) out += '-'; out += t[i]; }
+    return out;
+  }
+
+  function bindInputs() {
+    $$('[data-k]').forEach(function (el) {
+      var k = el.dataset.k;
+      if (el.type === 'checkbox') el.checked = !!S[k];
+      else if (typeof S[k] === 'string') el.value = S[k];
+      el.addEventListener('input', function () {
+        if (k === 'sort') { el.value = fmtSort(el.value); }
+        else if (k === 'acct') { el.value = digits(el.value, 10); }
+        else if (k === 'orcid') { el.value = fmtOrcid(el.value); }
+        S[k] = el.type === 'checkbox' ? el.checked : el.value;
+        persist(); clearErr(k); refreshConditionals();
+      });
+    });
+    document.addEventListener('click', function (ev) {
+      var b = ev.target.closest && ev.target.closest('.choice button');
+      if (!b) return;
+      var key = b.parentElement.dataset.choice;
+      S[key] = b.dataset.v;
+      persist(); clearErr(key); refreshChoices(); refreshConditionals();
+    });
+    document.addEventListener('change', function (ev) {
+      var i = ev.target;
+      if (!(i && i.matches && i.matches('.opt input'))) return;
+      var key = i.name;
+      if (i.type === 'radio') { S[key] = i.value; if (key === 'emp') { if (i.value !== '01') delete S.hei01; if (i.value !== '02') delete S.hei02; } }
+      else {
+        var arr = (S[key] || []).slice(), at = arr.indexOf(i.value);
+        if (i.checked && at < 0) {
+          if (i.value === '99') arr = ['99'];
+          else { arr = arr.filter(function (v) { return v !== '99'; }); arr.push(i.value); }
+        } else if (!i.checked && at > -1) arr.splice(at, 1);
+        S[key] = arr;
+      }
+      persist(); clearErr(key); refreshOpts(); refreshConditionals();
+    });
+  }
+
+  /* ---------- Validation ---------- */
+  var REQ = 'Please answer this.';
+  function validate(step) {
+    var errs = [];
+    function need(k, msg) { if (!has(k)) errs.push([k, msg || 'Please fill this in.']); }
+    function choose(k) { if (!S[k]) errs.push([k, REQ]); }
+    if (step === 1) {
+      need('fullName', 'Please enter your name.');
+      if (!has('dob')) errs.push(['dob', 'Please enter your date of birth.']);
+      else if (S.dob > todayISO() || S.dob < '1900-01-01') errs.push(['dob', 'That date doesn’t look right.']);
+    } else if (step === 2) {
+      need('bankName', 'Please enter the name of your bank or building society.');
+      if (digits(S.sort || '', 6).length !== 6) errs.push(['sort', 'A sort code has 6 digits.']);
+      var a = digits(S.acct || '', 10);
+      if (a.length < 6 || a.length > 10) errs.push(['acct', 'Please check your account number. Most have 8 digits.']);
+      need('acctName', 'Please enter the name on the account.');
+    } else if (step === 3) {
+      choose('dis'); choose('pl');
+      if (S.pl === 'yes') need('plD', 'You answered Yes, so please give brief details and dates.');
+    } else if (step === 4) {
+      choose('emp');
+      if (S.emp === '01') need('hei01', 'Please enter the name of the institution.');
+      if (S.emp === '02') need('hei02', 'Please enter the name of the institution.');
+    } else if (step === 5) {
+      choose('qual');
+    } else if (step === 6) {
+      choose('acad');
+      if (S.acad === 'yes' && !(S.tq && S.tq.length)) errs.push(['tq', 'Please tick at least one, or tick "No academic teaching qualification held".']);
+      if (S.acad === 'yes' && has('orcid') && !/^\d{4}-\d{4}-\d{4}-\d{3}[\dX]$/.test(S.orcid)) errs.push(['orcid', 'An ORCID has four groups of four digits, like 0000-0002-1825-0097.']);
+    } else if (step === 7) {
+      need('signName', 'Please enter your name.');
+      if (!S.sig || !S.sig.length) errs.push(['sig', 'Please sign in the box.']);
+      need('signDate', 'Please choose the date.');
+      if (!S.agree) errs.push(['agree', 'Please tick to confirm you agree.']);
+    }
+    return errs;
+  }
+  function firstBadStep() {
+    for (var s = 1; s <= 7; s++) { var e = validate(s); if (e.length) return { step: s, errs: e }; }
+    return null;
+  }
+  function applyErrors(errs) {
+    clearAllErr();
+    errs.forEach(function (e) { showErr(e[0], e[1]); });
+    var first = errs.length && fieldOf(errs[0][0]);
+    if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  /* ---------- Navigation ---------- */
+  function go(n) {
+    S.step = Math.max(0, Math.min(STEPS.length - 1, n));
+    persist();
+    $$('.step').forEach(function (s) { s.hidden = Number(s.dataset.step) !== S.step; });
+    $('#where').textContent = S.step === 0 ? 'Start' : STEPS[S.step].label + ' · ' + (S.step + 1) + ' of ' + STEPS.length;
+    var pct = Math.round(S.step / (STEPS.length - 1) * 100);
+    $('#fill').style.width = pct + '%';
+    $('#track').setAttribute('aria-valuenow', String(pct));
+    $('#back').hidden = S.step === 0;
+    $('#next').textContent = STEPS[S.step].next;
+    $('#next').disabled = false;
+    clearAllErr();
+    if (S.step === 2 && !has('acctName') && has('fullName')) { S.acctName = S.fullName; $('#f-acctName').value = S.acctName; persist(); }
+    if (S.step === 7) enterSign();
+    if (S.step === 8) { renderSummary(); setSaveMsg(null); $('#after-save').hidden = true; }
+    window.scrollTo(0, 0);
+  }
+  function enterSign() {
+    if (!has('signName')) { S.signName = S.fullName || ''; $('#f-signName').value = S.signName; }
+    if (!has('signDate')) { S.signDate = todayISO(); $('#f-signDate').value = S.signDate; }
+    persist();
+    setTimeout(sizeCanvas, 0);
+  }
+
+  /* ---------- Signature pad ---------- */
+  var SIG_H = 180;
+  var cv, ctx, drawing = false, cur = null;
+  function inkColour() { return getComputedStyle(document.documentElement).getPropertyValue('--ink').trim() || '#000'; }
+  function sizeCanvas() {
+    var w = $('#sigwrap').clientWidth; if (!w) return;
+    var dpr = window.devicePixelRatio || 1;
+    cv.width = Math.round(w * dpr); cv.height = Math.round(SIG_H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    redraw();
+  }
+  function redraw() {
+    if (!ctx) return;
+    ctx.clearRect(0, 0, cv.width, cv.height);
+    ctx.lineWidth = 2.6; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.strokeStyle = inkColour(); ctx.fillStyle = inkColour();
+    (S.sig || []).forEach(function (st) {
+      if (st.length === 1) { ctx.beginPath(); ctx.arc(st[0][0] * SIG_H, st[0][1] * SIG_H, 1.4, 0, 6.3); ctx.fill(); return; }
+      ctx.beginPath();
+      st.forEach(function (p, i) { if (i) ctx.lineTo(p[0] * SIG_H, p[1] * SIG_H); else ctx.moveTo(p[0] * SIG_H, p[1] * SIG_H); });
+      ctx.stroke();
+    });
+    $('#sig-ph').hidden = !!(S.sig && S.sig.length);
+  }
+  function pt(ev) {
+    var r = cv.getBoundingClientRect();
+    return [Math.round((ev.clientX - r.left) / SIG_H * 1000) / 1000, Math.round((ev.clientY - r.top) / SIG_H * 1000) / 1000];
+  }
+  function bindSignature() {
+    cv = $('#sig'); ctx = cv.getContext('2d');
+    cv.addEventListener('pointerdown', function (ev) {
+      ev.preventDefault();
+      try { cv.setPointerCapture(ev.pointerId); } catch (e) {}
+      drawing = true; cur = [pt(ev)];
+      if (!S.sig) S.sig = [];
+      S.sig.push(cur); clearErr('sig'); redraw();
+    });
+    cv.addEventListener('pointermove', function (ev) {
+      if (!drawing) return;
+      ev.preventDefault();
+      var p = pt(ev), last = cur[cur.length - 1];
+      if (Math.abs(p[0] - last[0]) + Math.abs(p[1] - last[1]) < 0.004) return;
+      cur.push(p);
+      var n = cur.length;
+      if (n > 1) {
+        ctx.lineWidth = 2.6; ctx.lineCap = 'round'; ctx.strokeStyle = inkColour();
+        ctx.beginPath(); ctx.moveTo(cur[n - 2][0] * SIG_H, cur[n - 2][1] * SIG_H); ctx.lineTo(p[0] * SIG_H, p[1] * SIG_H); ctx.stroke();
+      }
+    });
+    function end() { if (!drawing) return; drawing = false; cur = null; persist(); redraw(); }
+    cv.addEventListener('pointerup', end);
+    cv.addEventListener('pointercancel', end);
+    cv.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+    $('#sig-clear').addEventListener('click', function () { S.sig = []; persist(); redraw(); });
+    window.addEventListener('resize', function () { if (S.step === 7) sizeCanvas(); });
+    try { window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', redraw); } catch (e) {}
+  }
+  function signaturePng() {
+    var st = S.sig || []; if (!st.length) return null;
+    var x0 = 9e9, y0 = 9e9, x1 = -9e9, y1 = -9e9;
+    st.forEach(function (s) { s.forEach(function (p) { x0 = Math.min(x0, p[0]); x1 = Math.max(x1, p[0]); y0 = Math.min(y0, p[1]); y1 = Math.max(y1, p[1]); }); });
+    var pad = 0.08; x0 -= pad; y0 -= pad; x1 += pad; y1 += pad;
+    var sc = 320, w = Math.max(60, Math.round((x1 - x0) * sc)), h = Math.max(30, Math.round((y1 - y0) * sc));
+    var c = document.createElement('canvas'); c.width = w; c.height = h;
+    var g = c.getContext('2d'); g.lineWidth = 5; g.lineCap = 'round'; g.lineJoin = 'round'; g.strokeStyle = '#000'; g.fillStyle = '#000';
+    st.forEach(function (s) {
+      if (s.length === 1) { g.beginPath(); g.arc((s[0][0] - x0) * sc, (s[0][1] - y0) * sc, 2.5, 0, 6.3); g.fill(); return; }
+      g.beginPath();
+      s.forEach(function (p, i) { var X = (p[0] - x0) * sc, Y = (p[1] - y0) * sc; if (i) g.lineTo(X, Y); else g.moveTo(X, Y); });
+      g.stroke();
+    });
+    return { url: c.toDataURL('image/png'), w: w, h: h };
+  }
+
+  /* ---------- Summary ---------- */
+  function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  function sumCard(title, step, rows) {
+    var c = el('div', 'card');
+    var hd = el('div', 'sum-head'); hd.appendChild(el('h3', '', title));
+    var b = el('button', '', 'Change'); b.type = 'button'; b.addEventListener('click', function () { go(step); });
+    hd.appendChild(b); c.appendChild(hd);
+    var dl = el('dl', 'sum');
+    rows.forEach(function (r) {
+      if (r[1] == null || r[1] === '') return;
+      var d = el('div'); d.appendChild(el('dt', '', r[0]));
+      var dd = el('dd'); if (r[1] instanceof Node) dd.appendChild(r[1]); else dd.textContent = r[1];
+      d.appendChild(dd); dl.appendChild(d);
+    });
+    c.appendChild(dl); return c;
+  }
+  function empText() {
+    var t = S.emp ? S.emp + '  ' + label(EMP, S.emp) : '';
+    if (S.emp === '01' && S.hei01) t += '\nPrevious HEI: ' + S.hei01;
+    if (S.emp === '02' && S.hei02) t += '\nPrevious HEI: ' + S.hei02;
+    return t;
+  }
+  function renderSummary() {
+    var box = $('#summary'); box.innerHTML = '';
+    box.appendChild(sumCard('About you', 1, [['Name', S.fullName], ['Date of birth', fmtDate(S.dob)]]));
+    box.appendChild(sumCard('Bank details', 2, [['Bank', S.bankName], ['Sort code', S.sort], ['Account number', S.acct], ['Name on account', S.acctName]]));
+    box.appendChild(sumCard('Disability and leave', 3, [
+      ['Disability', yn(S.dis) + (S.dis === 'yes' && S.disD ? '\n' + S.disD : '')],
+      ['Parental leave', yn(S.pl) + (S.pl === 'yes' && S.plD ? '\n' + S.plD : '')]
+    ]));
+    box.appendChild(sumCard('Most recent employment', 4, [['Chosen', empText()]]));
+    box.appendChild(sumCard('Highest qualification', 5, [['Chosen', S.qual ? S.qual + '  ' + label(QUAL, S.qual) : '']]));
+    var tq = (S.tq || []).map(function (c) { return c + '  ' + label(TQ, c); }).join('\n');
+    box.appendChild(sumCard('Teaching', 6, [
+      ['Academic staff', S.acad === 'yes' ? 'Yes' : 'No'],
+      ['Qualifications', S.acad === 'yes' ? tq : ''],
+      ['ORCID', S.acad === 'yes' ? S.orcid : '']
+    ]));
+    var sp = signaturePng(), img = null;
+    if (sp) { img = el('img', 'sum-sig'); img.src = sp.url; img.alt = 'Your signature'; }
+    box.appendChild(sumCard('Signature', 7, [['Name', S.signName], ['Date', fmtDate(S.signDate)], ['Signature', img]]));
+  }
+
+  /* ---------- PDF ---------- */
+  function clean(s) {
+    s = String(s == null ? '' : s)
+      .replace(/[‘’‚′]/g, "'").replace(/[“”„]/g, '"')
+      .replace(/[–—−]/g, '-').replace(/…/g, '...').replace(/[   ]/g, ' ').replace(/\t/g, ' ').replace(/\r/g, '');
+    var out = '';
+    for (var i = 0; i < s.length; i++) {
+      var ch = s[i], c = s.charCodeAt(i);
+      if (c === 10 || (c >= 32 && c < 127) || (c >= 161 && c <= 255)) { out += ch; continue; }
+      var map = { 'Ł': 'L', 'ł': 'l', 'Đ': 'D', 'đ': 'd', 'ı': 'i', 'Œ': 'OE', 'œ': 'oe' };
+      if (map[ch]) { out += map[ch]; continue; }
+      var base = ch.normalize('NFD').replace(/[̀-ͯ]/g, '');
+      out += (base.length && base.charCodeAt(0) < 256 && base.charCodeAt(0) >= 32) ? base : '?';
+    }
+    return out;
+  }
+
+  function buildPdf() {
+    var jsPDF = window.jspdf.jsPDF;
+    var doc = new jsPDF({ unit: 'mm', format: 'a4', compress: true });
+    doc.setProperties({ title: 'HR Database Data Input Form (completed)' });
+    var M = 16, W = 178, BOT = 280, y = 0, MM = 0.3528;
+    function LH(sz, f) { return sz * MM * (f || 1.4); }
+    function txt(s, x, yy, size, bold, grey, opt) {
+      doc.setFont('helvetica', bold ? 'bold' : 'normal'); doc.setFontSize(size); doc.setTextColor(grey || 0);
+      doc.text(s, x, yy, opt);
+    }
+    function pageHead() { txt('CONFIDENTIAL', M, 12, 8.5, true, 80); }
+    function newPage() { doc.addPage(); pageHead(); y = 22; }
+    function need(h) { if (y + h > BOT) newPage(); }
+    function wrap(s, w, size, bold) { doc.setFont('helvetica', bold ? 'bold' : 'normal'); doc.setFontSize(size); return doc.splitTextToSize(clean(s), w); }
+    function para(s, o) {
+      o = o || {}; var size = o.size || 10, x = o.x == null ? M : o.x, w = o.w || W, gap = o.gap == null ? 3 : o.gap;
+      var ls = wrap(s, w, size, o.bold), lh = LH(size);
+      ls.forEach(function (l) { need(lh); txt(l, x, y + size * MM * 1.05, size, o.bold, o.grey, o.align ? { align: o.align } : undefined); y += lh; });
+      y += gap;
+    }
+    function h2(s) {
+      need(16); y += 2; txt(s, M, y + 5, 12.5, true); y += 7.5;
+      doc.setDrawColor(40); doc.setLineWidth(0.4); doc.line(M, y, M + W, y); y += 4;
+    }
+    function kv(lab, value, lw) {
+      lw = lw || 46;
+      var v = clean(value) || '-', vl = wrap(v, W - lw - 2, 10, false), lh = LH(10);
+      var ll = wrap(lab, lw - 4, 9, true), llh = LH(9);
+      var h = Math.max(ll.length * llh, vl.length * lh) + 2.6;
+      need(h);
+      ll.forEach(function (l, i) { txt(l, M, y + 3.7 + i * llh, 9, true, 70); });
+      vl.forEach(function (l, i) { txt(l, M + lw, y + 3.8 + i * lh, 10, false); });
+      y += h; doc.setDrawColor(200); doc.setLineWidth(0.2); doc.line(M, y - 0.6, M + W, y - 0.6);
+    }
+    function box(x, yy, on, s) {
+      s = s || 4.2;
+      doc.setDrawColor(40); doc.setLineWidth(0.35); doc.rect(x, yy, s, s);
+      if (on) { doc.setLineWidth(0.6); doc.line(x + 0.8, yy + 0.8, x + s - 0.8, yy + s - 0.8); doc.line(x + s - 0.8, yy + 0.8, x + 0.8, yy + s - 0.8); }
+    }
+    var X0 = M + W - 40, X1 = M + W - 20;
+    function ynRow(text, val) {
+      var ls = wrap(text, W - 50, 10, true), lh = LH(10), h = Math.max(ls.length * lh, 6) + (val === 'skip' ? 5 : 2.5);
+      need(h);
+      ls.forEach(function (l, i) { txt(l, M, y + 3.8 + i * lh, 10, true); });
+      txt('Yes', X0, y + 3.3, 9, false); box(X0 + 7, y, val === 'yes');
+      txt('No', X1, y + 3.3, 9, false); box(X1 + 6, y, val === 'no');
+      if (val === 'skip') txt('Prefer not to say', M, y + ls.length * lh + 3.2, 8.5, false, 110);
+      y += h;
+    }
+    function sigBlock(label) {
+      var sp = signaturePng();
+      need(30); txt(label, M, y + 3.7, 9, true, 70);
+      if (sp) { var sc = Math.min(70 / sp.w, 22 / sp.h); doc.addImage(sp.url, 'PNG', M + 24, y + 1, sp.w * sc, sp.h * sc); }
+      txt('Dated:', M + 110, y + 3.7, 9, true, 70); txt(fmtDate(S.signDate), M + 124, y + 3.8, 10, false);
+      y += 26; doc.setDrawColor(200); doc.setLineWidth(0.2); doc.line(M, y - 0.6, M + W, y - 0.6);
+    }
+    function grid(title, note, items, isOn, extra) {
+      var size = 8, lh = LH(size, 1.22), padY = 1.5;
+      need(16);
+      var tl = wrap(title, W - 4, 9, true);
+      var nl = note ? wrap(note, W - 4, 7.5, false) : [];
+      var hh = tl.length * LH(9, 1.25) + nl.length * LH(7.5, 1.2) + 2.4;
+      doc.setDrawColor(40); doc.setLineWidth(0.3); doc.setFillColor(235, 238, 240); doc.rect(M, y, W, hh, 'FD');
+      var ty = y + 1.2 + 9 * MM;
+      tl.forEach(function (l, i) { txt(l, M + 2, ty + i * LH(9, 1.25), 9, true); });
+      nl.forEach(function (l, i) { txt(l, M + 2, ty + tl.length * LH(9, 1.25) + i * LH(7.5, 1.2) - 0.4, 7.5, false, 90); });
+      y += hh;
+      var cw = [12, W - 12 - 14, 14];
+      items.forEach(function (it) {
+        var lines = wrap(it[1], cw[1] - 4, size, false);
+        var ex = extra && extra[it[0]] ? wrap(extra[it[0]], cw[1] - 4, size, true) : [];
+        var h = (lines.length + ex.length) * lh + padY * 2;
+        need(h);
+        doc.setDrawColor(40); doc.setLineWidth(0.25);
+        doc.rect(M, y, cw[0], h); doc.rect(M + cw[0], y, cw[1], h); doc.rect(M + cw[0] + cw[1], y, cw[2], h);
+        txt(it[0], M + 2, y + padY + size * MM, size, false);
+        lines.forEach(function (l, i) { txt(l, M + cw[0] + 2, y + padY + size * MM + i * lh, size, false); });
+        ex.forEach(function (l, i) { txt(l, M + cw[0] + 2, y + padY + size * MM + (lines.length + i) * lh, size, true); });
+        box(M + cw[0] + cw[1] + (cw[2] - 4) / 2, y + (h - 4) / 2, isOn(it[0]), 4);
+        y += h;
+      });
+      y += 3;
+    }
+
+    /* Page 1 */
+    pageHead(); y = 24;
+    para('HR DATABASE DATA INPUT FORM', { size: 14, bold: true, gap: 1 });
+    para('Chichester Staff Services Ltd / University of Chichester', { size: 9, grey: 90, gap: 5 });
+    kv('Employee name', S.fullName); kv('Date of birth', fmtDate(S.dob));
+    h2('Bank Details');
+    kv('Bank / Building Society name', S.bankName); kv('Sort code', S.sort); kv('Account number', S.acct); kv('Name on account', S.acctName);
+    y += 2;
+    para('Please note that salaries paid directly into a Bank or Building Society account via BACS transfer may be drawn upon on the day the account is credited with your salary.', { size: 9, grey: 70, gap: 3 });
+    para('I hereby authorise the University of Chichester to pay my salary directly into my Bank or Building Society account via BACS transfer.', { size: 10, bold: true, gap: 3 });
+    sigBlock('Signed');
+    h2('DISABILITY');
+    para('Definition given in the Equality Act 2010: "You\'re disabled under the Equality Act 2010 if you have a physical or mental impairment that has a \'substantial\' and \'long-term\' negative effect on your ability to do normal daily activities."', { size: 8.5, grey: 70, gap: 3 });
+    ynRow('Do you have a disability as defined by the Equality Act 2010?', S.dis);
+    kv('If appropriate, assistance the University could provide', S.dis === 'yes' ? S.disD : '', 62);
+    y += 2;
+    ynRow('Have you taken a period of Parental Leave during your previous employment?', S.pl);
+    kv('If yes, brief details and dates', S.pl === 'yes' ? S.plD : '', 62);
+
+    /* Page 2 */
+    newPage();
+    var extra = {};
+    if (S.emp === '01' && S.hei01) extra['01'] = 'Name of previous HEI: ' + S.hei01;
+    if (S.emp === '02' && S.hei02) extra['02'] = 'Name of previous HEI: ' + S.hei02;
+    grid('MOST RECENT EMPLOYMENT', '', EMP, function (c) { return S.emp === c; }, extra);
+    grid('QUALIFICATIONS - Highest Qualification Held', 'Please tick your highest only and bring your original certificate to your HR induction', QUAL, function (c) { return S.qual === c; });
+    var acad = S.acad === 'yes';
+    grid('ACADEMIC TEACHING QUALIFICATION (academic staff to complete)', acad ? 'Please tick all you have and bring your original certificate/s to your HR induction.' : 'Not completed. The applicant has said they are not academic staff.',
+      TQ, function (c) { return acad && (S.tq || []).indexOf(c) > -1; });
+    need(24);
+    kv('Academic staff - ORCID identifier no.', acad ? (S.orcid || 'None given') : 'Not applicable', 62);
+    y += 2;
+    sigBlock('Signed');
+
+    var n = doc.getNumberOfPages();
+    for (var p = 1; p <= n; p++) {
+      doc.setPage(p);
+      txt('Page ' + p + ' of ' + n, M + W, 290, 8.5, false, 110, { align: 'right' });
+      if (p === 1) txt('Completed on a phone using a digital copy of the HR Database Data Input Form (May 2026).', M, 290, 8, false, 110);
+    }
+    return doc.output('blob');
+  }
+
+  /* ---------- Saving ---------- */
+  var dlNs = null;
+  try { if (window.claude && window.claude.use) window.claude.use('downloads').then(function (n) { dlNs = n; }).catch(function () {}); } catch (e) {}
+
+  function setSaveMsg(text, kind) {
+    var m = $('#save-msg');
+    if (!text) { m.hidden = true; m.textContent = ''; return; }
+    m.className = 'status ' + (kind || 'info'); m.textContent = text; m.hidden = false;
+  }
+  function saved() {
+    setSaveMsg('Saved. Your completed form is a PDF on this phone.', 'ok');
+    $('#after-save').hidden = false; $('#next').textContent = 'Save PDF again';
+    $('#after-save').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+  async function savePdf() {
+    var bad = firstBadStep();
+    if (bad) { go(bad.step); applyErrors(bad.errs); return; }
+    var btn = $('#next'); btn.disabled = true; setSaveMsg('Making your PDF…', 'info');
+    var blob;
+    try {
+      if (!window.jspdf) throw new Error('The PDF maker did not load. Check your connection and reload this page.');
+      blob = buildPdf();
+    } catch (e) { setSaveMsg('Sorry, the PDF could not be made. ' + (e && e.message ? e.message : ''), 'bad'); btn.disabled = false; return; }
+    var filename = 'hr-data-input-form-completed.pdf';
+    try {
+      if (dlNs) {
+        try { await dlNs.save({ filename: filename, data: blob }); saved(); btn.disabled = false; return; }
+        catch (e) {
+          if (e && e.code === 'declined') { setSaveMsg('Not saved. Tap the button again when you are ready.', 'info'); btn.disabled = false; return; }
+        }
+      }
+      var file = new File([blob], filename, { type: 'application/pdf' });
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        try { await navigator.share({ files: [file], title: 'HR data input form' }); saved(); }
+        catch (e) { if (e && e.name === 'AbortError') setSaveMsg('Not saved. Tap the button again when you are ready.', 'info'); else throw e; }
+        btn.disabled = false; return;
+      }
+      var url = URL.createObjectURL(blob), a = document.createElement('a');
+      a.href = url; a.download = filename; document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function () { URL.revokeObjectURL(url); }, 20000);
+      saved();
+    } catch (e) {
+      setSaveMsg('Your phone would not save the file from here. Try opening this page in your phone’s browser, then tap Save as PDF again.', 'bad');
+    }
+    btn.disabled = false;
+  }
+
+  /* ---------- Clearing ---------- */
+  function clearAll() {
+    try { localStorage.removeItem(KEY); } catch (e) {}
+    S = { step: 0 };
+    $$('[data-k]').forEach(function (el) { if (el.type === 'checkbox') el.checked = false; else el.value = ''; });
+    refreshChoices(); refreshOpts(); refreshConditionals(); redraw();
+    $('#clear-sure').hidden = true; $('#clear-ask').hidden = false;
+    go(0); $('#clear-start').hidden = true;
+  }
+
+  /* ---------- Init ---------- */
+  function init() {
+    load();
+    buildList('#list-emp', 'emp', EMP, false);
+    buildList('#list-qual', 'qual', QUAL, false);
+    buildList('#list-tq', 'tq', TQ, true);
+    buildChoices();
+    $('#f-dob').max = todayISO();
+    bindInputs(); bindSignature();
+    refreshChoices(); refreshOpts(); refreshConditionals();
+    var started = Object.keys(S).some(function (k) { return k !== 'step' && S[k] && (typeof S[k] !== 'object' || S[k].length); });
+    $('#clear-start').hidden = !started;
+    $('#clear-start').addEventListener('click', clearAll);
+    $('#clear-ask').addEventListener('click', function () { $('#clear-sure').hidden = false; $('#clear-ask').hidden = true; });
+    $('#clear-no').addEventListener('click', function () { $('#clear-sure').hidden = true; $('#clear-ask').hidden = false; });
+    $('#clear-yes').addEventListener('click', clearAll);
+    $('#back').addEventListener('click', function () { go(S.step - 1); });
+    $('#next').addEventListener('click', function () {
+      if (S.step === 8) { savePdf(); return; }
+      var errs = validate(S.step);
+      if (errs.length) { applyErrors(errs); return; }
+      go(S.step + 1);
+    });
+    go(S.step);
+  }
+  init();
+})();
+</script>
+</body></html>
